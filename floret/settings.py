@@ -50,7 +50,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 INTERNAL_APPS = [
     "floret",
     "account",
-    "home",
+    "planner",
     "theme",
 ]
 

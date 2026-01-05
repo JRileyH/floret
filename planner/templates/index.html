@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block scripts %}
+  <script src="{% static 'plant-filter.js' %}" defer></script>
+{% endblock scripts %}
+{% block content %}
+  <section class="flex-1 p-8 relative">
+    {% include "partials/plant_filter.html" %}
+    <div id="plant-container"
+         hx-get="{% url 'plant_list' %}"
+         hx-trigger="load, filterUpdate from:body"
+         hx-vals="js:{filters: document.getElementById('filters-json').value}"
+         hx-swap="innerHTML"
+         class="min-h-32">
+      <div class="flex items-center justify-center py-12">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
+    </div>
+    {% include "partials/mini_summary.html" %}
+  </section>
+{% endblock content %}

@@ -1,0 +1,39 @@
+<!-- Results Count -->
+<div class="mb-4 text-center">
+    <span id="results-count" class="text-sm opacity-70">
+        {% if total_count %}{{ total_count }} plant{{ total_count|pluralize }}{% endif %}
+    </span>
+</div>
+<div id="plant-list" class="space-y-4">
+    {% if plants %}
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(400px,420px))] gap-4 justify-center">
+            {% for plant in plants %}
+                {% include "partials/plant_card.html" with plant=plant %}
+            {% endfor %}
+        </div>
+        {% if page_obj.has_other_pages %}
+            <div class="flex justify-center gap-2 mt-6">
+                {% if page_obj.has_previous %}
+                    <button class="btn btn-outline"
+                            hx-get="{% url 'plant_list' %}?page={{ page_obj.previous_page_number }}"
+                            hx-vals="js:{filters: document.getElementById('filters-json').value}"
+                            hx-target="#plant-container"
+                            hx-swap="innerHTML">Previous</button>
+                {% endif %}
+                <span class="flex items-center px-4">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <button class="btn btn-outline"
+                            hx-get="{% url 'plant_list' %}?page={{ page_obj.next_page_number }}"
+                            hx-vals="js:{filters: document.getElementById('filters-json').value}"
+                            hx-target="#plant-container"
+                            hx-swap="innerHTML">Next</button>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="alert">
+            {% include "icons/info.html" %}
+            <span>No plants found. Please adjust your filters.</span>
+        </div>
+    {% endif %}
+</div>

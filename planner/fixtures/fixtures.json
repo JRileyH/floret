@@ -1,0 +1,450 @@
+[
+  {
+    "model": "planner.color",
+    "pk": "11111111-1111-1111-1111-111111111111",
+    "fields": {
+      "name": "white",
+      "hex_code": "#ffffff"
+    }
+  },
+  {
+    "model": "planner.color",
+    "pk": "22222222-2222-2222-2222-222222222222",
+    "fields": {
+      "name": "purple",
+      "hex_code": "#8e44ad"
+    }
+  },
+  {
+    "model": "planner.color",
+    "pk": "33333333-3333-3333-3333-333333333333",
+    "fields": {
+      "name": "pink",
+      "hex_code": "#d8a7c8"
+    }
+  },
+  {
+    "model": "planner.color",
+    "pk": "44444444-4444-4444-4444-444444444444",
+    "fields": {
+      "name": "blue",
+      "hex_code": "#5dade2"
+    }
+  },
+  {
+    "model": "planner.color",
+    "pk": "55555555-5555-5555-5555-555555555555",
+    "fields": {
+      "name": "orange",
+      "hex_code": "#e67e22"
+    }
+  },
+  {
+    "model": "planner.color",
+    "pk": "66666666-6666-6666-6666-666666666666",
+    "fields": {
+      "name": "yellow",
+      "hex_code": "#f1c40f"
+    }
+  },
+  {
+    "model": "planner.color",
+    "pk": "77777777-7777-7777-7777-777777777777",
+    "fields": {
+      "name": "red",
+      "hex_code": "#e74c3c"
+    }
+  },
+  {
+    "model": "planner.plantfeature",
+    "pk": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "fields": {
+      "name": "Attracts birds",
+      "icon": "icons/bird.png",
+      "description": "Plants that attract birds"
+    }
+  },
+  {
+    "model": "planner.plantfeature",
+    "pk": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+    "fields": {
+      "name": "Attracts bees",
+      "icon": "icons/bee.png",
+      "description": "Plants that attract bees"
+    }
+  },
+  {
+    "model": "planner.plantfeature",
+    "pk": "cccccccc-cccc-cccc-cccc-cccccccccccc",
+    "fields": {
+      "name": "Attracts butterflies",
+      "icon": "icons/butterfly.png",
+      "description": "Plants that attract butterflies"
+    }
+  },
+  {
+    "model": "planner.plantfeature",
+    "pk": "dddddddd-dddd-dddd-dddd-dddddddddddd",
+    "fields": {
+      "name": "Good for cutting",
+      "icon": "icons/scissors.png",
+      "description": "Plants good for cutting"
+    }
+  },
+  {
+    "model": "planner.plantfeature",
+    "pk": "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee",
+    "fields": {
+      "name": "Fragrant",
+      "icon": "icons/nose.png",
+      "description": "Fragrant plants"
+    }
+  },
+  {
+    "model": "planner.plantfeature",
+    "pk": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+    "fields": {
+      "name": "Good for drying",
+      "icon": "icons/fallen_leaf.png",
+      "description": "Plants good for drying"
+    }
+  },
+  {
+    "model": "planner.plantfeature",
+    "pk": "10101010-1010-1010-1010-101010101010",
+    "fields": {
+      "name": "Deer resistant",
+      "icon": "icons/deer.png",
+      "description": "Deer resistant plants"
+    }
+  },
+  {
+    "model": "planner.plantfeature",
+    "pk": "20202020-2020-2020-2020-202020202020",
+    "fields": {
+      "name": "Prolific bloomer",
+      "icon": "icons/boom.png",
+      "description": "Prolific blooming plants"
+    }
+  },
+  {
+    "model": "planner.niche",
+    "pk": "30303030-3030-3030-3030-303030303030",
+    "fields": {
+      "slug": "peak",
+      "title": "Peak",
+      "subtitle": "5-7 feet tall • Peak layer",
+      "role": "Tall structure, high focal points, pollinator magnets, dramatic blooms"
+    }
+  },
+  {
+    "model": "planner.niche",
+    "pk": "40404040-4040-4040-4040-404040404040",
+    "fields": {
+      "slug": "midlayer",
+      "title": "Midlayer",
+      "subtitle": "2-4 feet tall • Middle layer",
+      "role": "Fills in the middle, adds color and texture, supports pollinators"
+    }
+  },
+  {
+    "model": "planner.niche",
+    "pk": "50505050-5050-5050-5050-505050505050",
+    "fields": {
+      "slug": "airy-filler",
+      "title": "Airy Filler",
+      "subtitle": "Small but stark blooms • Filler layer",
+      "role": "For adding lightness, texture, and volume to arrangements"
+    }
+  },
+  {
+    "model": "planner.niche",
+    "pk": "60606060-6060-6060-6060-606060606060",
+    "fields": {
+      "slug": "edge",
+      "title": "Edge",
+      "subtitle": "1 foot or less • Edge layer",
+      "role": "Low growing accents, good for borders and edges"
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1",
+    "fields": {
+      "slug": "joe-pye",
+      "common_name": "Joe Pye Weed",
+      "scientific_name": "Eutrochium maculatum",
+      "image": "plants/joe-pye-weed.png",
+      "native": true,
+      "sun": ["full", "partial"],
+      "bloom": ["jul", "aug", "sep"],
+      "notes": "Sturdy prolific bloomer and strong pollinator attractor.",
+      "link": "https://www.prairiemoon.com/eutrochium-maculatum-joe-pye-weed",
+      "height": 6.0,
+      "spread": 3.5,
+      "niche": "30303030-3030-3030-3030-303030303030",
+      "colors": ["33333333-3333-3333-3333-333333333333"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "cccccccc-cccc-cccc-cccc-cccccccccccc", "dddddddd-dddd-dddd-dddd-dddddddddddd", "ffffffff-ffff-ffff-ffff-ffffffffffff", "10101010-1010-1010-1010-101010101010"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "a2a2a2a2-a2a2-a2a2-a2a2-a2a2a2a2a2a2",
+    "fields": {
+      "slug": "sweet-joe-pye",
+      "common_name": "Sweet Joe Pye Weed",
+      "scientific_name": "Eutrochium purpureum",
+      "image": "plants/sweet-joe-pye-weed.png",
+      "native": true,
+      "sun": ["partial", "shade"],
+      "bloom": ["jul", "aug", "sep"],
+      "notes": "A rare shade tolerant, tall peak cut flower, and a great alternative to classic Joe Pye Weed in shady areas. Attracts monarchs and swallowtails.",
+      "link": "https://www.prairiemoon.com/eutrochium-purpureum-sweet-joe-pye-weed",
+      "height": 7.0,
+      "spread": 3.5,
+      "niche": "30303030-3030-3030-3030-303030303030",
+      "colors": ["33333333-3333-3333-3333-333333333333"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "cccccccc-cccc-cccc-cccc-cccccccccccc", "dddddddd-dddd-dddd-dddd-dddddddddddd", "ffffffff-ffff-ffff-ffff-ffffffffffff", "10101010-1010-1010-1010-101010101010", "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3",
+    "fields": {
+      "slug": "sneezeweed",
+      "common_name": "Sneezeweed",
+      "scientific_name": "Helenium autumnale",
+      "image": "plants/sneezeweed.png",
+      "native": true,
+      "sun": ["full", "partial"],
+      "bloom": ["aug", "sep", "oct"],
+      "notes": "Despite its common name, it presents no problems for most allergy sufferers. Its pollen is distributed by insects, not wind.",
+      "link": "https://www.prairiemoon.com/helenium-autumnale-sneezeweed",
+      "height": 4.0,
+      "spread": 2.0,
+      "niche": "30303030-3030-3030-3030-303030303030",
+      "colors": ["66666666-6666-6666-6666-666666666666"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", "dddddddd-dddd-dddd-dddd-dddddddddddd", "ffffffff-ffff-ffff-ffff-ffffffffffff", "10101010-1010-1010-1010-101010101010", "20202020-2020-2020-2020-202020202020"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "a4a4a4a4-a4a4-a4a4-a4a4-a4a4a4a4a4a4",
+    "fields": {
+      "slug": "wild-senna",
+      "common_name": "Wild Senna",
+      "scientific_name": "Senna hebecarpa",
+      "image": "plants/wild-senna.png",
+      "native": true,
+      "sun": ["full", "partial"],
+      "bloom": ["jul", "aug"],
+      "notes": "A tall native wildflower with bright yellow blooms that attract pollinators. Seeds feed wild turkey and other birds in fall.",
+      "link": "https://www.prairiemoon.com/senna-hebecarpa-wild-senna",
+      "height": 5.0,
+      "spread": 2.0,
+      "niche": "30303030-3030-3030-3030-303030303030",
+      "colors": ["66666666-6666-6666-6666-666666666666"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "cccccccc-cccc-cccc-cccc-cccccccccccc", "dddddddd-dddd-dddd-dddd-dddddddddddd", "10101010-1010-1010-1010-101010101010"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "a5a5a5a5-a5a5-a5a5-a5a5-a5a5a5a5a5a5",
+    "fields": {
+      "slug": "ironweed",
+      "common_name": "New York Ironweed",
+      "scientific_name": "Vernonia noveboracensis",
+      "image": "plants/ironweed.png",
+      "native": true,
+      "sun": ["full"],
+      "bloom": ["aug", "sep", "oct"],
+      "notes": "Highly tolerant of many types of soil and a highly recommended plant for native east coast gardens.",
+      "link": "https://www.prairiemoon.com/vernonia-noveboracensis-new-york-ironweed",
+      "height": 6.0,
+      "spread": 2.0,
+      "niche": "30303030-3030-3030-3030-303030303030",
+      "colors": ["22222222-2222-2222-2222-222222222222"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", "dddddddd-dddd-dddd-dddd-dddddddddddd", "ffffffff-ffff-ffff-ffff-ffffffffffff", "10101010-1010-1010-1010-101010101010", "20202020-2020-2020-2020-202020202020"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "a6a6a6a6-a6a6-a6a6-a6a6-a6a6a6a6a6a6",
+    "fields": {
+      "slug": "flat-topped-aster",
+      "common_name": "Flat-Topped Aster",
+      "scientific_name": "Doellingeria umbellata",
+      "image": "plants/flat-topped-aster.png",
+      "native": true,
+      "sun": ["full", "partial"],
+      "bloom": ["jul", "aug", "sep"],
+      "notes": "Blooms earlier and stands taller than most Aster. Spreads agressively via rhizomes.",
+      "link": "https://www.prairiemoon.com/doellingeria-umbellata-flat-topped-aster",
+      "height": 4.0,
+      "spread": 1.0,
+      "niche": null,
+      "colors": ["11111111-1111-1111-1111-111111111111"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "cccccccc-cccc-cccc-cccc-cccccccccccc", "dddddddd-dddd-dddd-dddd-dddddddddddd"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "a7a7a7a7-a7a7-a7a7-a7a7-a7a7a7a7a7a7",
+    "fields": {
+      "slug": "butterfly-weed",
+      "common_name": "Butterfly Weed",
+      "scientific_name": "Asclepias tuberosa",
+      "image": "plants/butterfly-weed.png",
+      "native": true,
+      "sun": ["full"],
+      "bloom": ["jun", "jul", "aug"],
+      "notes": "A showy native milkweed that is a magnet for butterflies, especially Monarchs. Its bright orange flowers make stunning cut flowers.",
+      "link": "https://www.prairiemoon.com/asclepias-tuberosa-butterfly-weed",
+      "height": 2.0,
+      "spread": 1.0,
+      "niche": "40404040-4040-4040-4040-404040404040",
+      "colors": ["55555555-5555-5555-5555-555555555555"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "cccccccc-cccc-cccc-cccc-cccccccccccc", "dddddddd-dddd-dddd-dddd-dddddddddddd", "ffffffff-ffff-ffff-ffff-ffffffffffff", "10101010-1010-1010-1010-101010101010", "20202020-2020-2020-2020-202020202020"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "a8a8a8a8-a8a8-a8a8-a8a8-a8a8a8a8a8a8",
+    "fields": {
+      "slug": "pearly-everlasting",
+      "common_name": "Pearly Everlasting",
+      "scientific_name": "Anaphalis margaritacea",
+      "image": "plants/pearly-everlasting.png",
+      "native": true,
+      "sun": ["full", "partial"],
+      "bloom": ["jun", "jul", "aug", "sep"],
+      "notes": "A silvery foliage plant with clusters of small white flowers that will maintain their shape and color when dried.",
+      "link": "https://www.prairiemoon.com/anaphalis-margaritacea-pearly-everlasting",
+      "height": 2.0,
+      "spread": 1.5,
+      "niche": "50505050-5050-5050-5050-505050505050",
+      "colors": ["11111111-1111-1111-1111-111111111111"],
+      "features": ["cccccccc-cccc-cccc-cccc-cccccccccccc", "dddddddd-dddd-dddd-dddd-dddddddddddd", "ffffffff-ffff-ffff-ffff-ffffffffffff", "10101010-1010-1010-1010-101010101010", "20202020-2020-2020-2020-202020202020"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "a9a9a9a9-a9a9-a9a9-a9a9-a9a9a9a9a9a9",
+    "fields": {
+      "slug": "wild-quinine",
+      "common_name": "Wild Quinine",
+      "scientific_name": "Parthenium integrifolium",
+      "image": "plants/wild-quinine.png",
+      "native": true,
+      "sun": ["full", "partial"],
+      "bloom": ["jul", "aug", "sep"],
+      "notes": "Wide disk florets with small white flowers, great accents for arrangements. Can spread agressively in ideal conditions.",
+      "link": "https://www.prairiemoon.com/parthenium-integrifolium-wild-quinine",
+      "height": 3.0,
+      "spread": 1.5,
+      "niche": "50505050-5050-5050-5050-505050505050",
+      "colors": ["11111111-1111-1111-1111-111111111111"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "dddddddd-dddd-dddd-dddd-dddddddddddd", "ffffffff-ffff-ffff-ffff-ffffffffffff", "10101010-1010-1010-1010-101010101010"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "b1b1b1b1-b1b1-b1b1-b1b1-b1b1b1b1b1b1",
+    "fields": {
+      "slug": "american-columbine",
+      "common_name": "American Columbine",
+      "scientific_name": "Aquilegia canadensis",
+      "image": "plants/american-columbine.png",
+      "native": true,
+      "sun": ["full", "partial", "shade"],
+      "bloom": ["apr", "may", "jun"],
+      "notes": "An early source of nectar for hummingbirds and an early bright color for spring gardens.",
+      "link": "https://www.prairiemoon.com/aquilegia-canadensis-columbine",
+      "height": 2.0,
+      "spread": 1.0,
+      "niche": "40404040-4040-4040-4040-404040404040",
+      "colors": ["77777777-7777-7777-7777-777777777777"],
+      "features": ["aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "dddddddd-dddd-dddd-dddd-dddddddddddd", "10101010-1010-1010-1010-101010101010"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2",
+    "fields": {
+      "slug": "prairie-smoke",
+      "common_name": "Prairie Smoke",
+      "scientific_name": "Geum triflorum",
+      "image": "plants/prairie-smoke.png",
+      "native": true,
+      "sun": ["full", "partial"],
+      "bloom": ["may"],
+      "notes": "Unique fluffy seed heads that add texture to dried arrangements. Described as looking like pink smoke hovering above the ground after blooming en masse.",
+      "link": "https://www.prairienursery.com/prairie-smoke-geum-triflorum.html",
+      "height": 1.0,
+      "spread": 1.0,
+      "niche": "60606060-6060-6060-6060-606060606060",
+      "colors": ["33333333-3333-3333-3333-333333333333"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "dddddddd-dddd-dddd-dddd-dddddddddddd", "ffffffff-ffff-ffff-ffff-ffffffffffff", "10101010-1010-1010-1010-101010101010"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "b3b3b3b3-b3b3-b3b3-b3b3-b3b3b3b3b3b3",
+    "fields": {
+      "slug": "sundial-lupine",
+      "common_name": "Sundial Lupine",
+      "scientific_name": "Lupinus perennis",
+      "image": "plants/sundial-lupine.png",
+      "native": true,
+      "sun": ["full", "partial"],
+      "bloom": ["may", "jun", "jul"],
+      "notes": "A low-growing lupine with striking blue flowers that attract pollinators. An essential host plant for the endangered Karner blue butterfly.",
+      "link": "https://www.prairiemoon.com/lupinus-perennis-subsp-perennis-sundial-lupine",
+      "height": 1.0,
+      "spread": 1.0,
+      "niche": "60606060-6060-6060-6060-606060606060",
+      "colors": ["22222222-2222-2222-2222-222222222222"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "cccccccc-cccc-cccc-cccc-cccccccccccc", "dddddddd-dddd-dddd-dddd-dddddddddddd", "10101010-1010-1010-1010-101010101010"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "b4b4b4b4-b4b4-b4b4-b4b4-b4b4b4b4b4b4",
+    "fields": {
+      "slug": "wild-bergamot",
+      "common_name": "Wild Bergamot",
+      "scientific_name": "Monarda fistulosa",
+      "image": "plants/wild-bergamot.png",
+      "native": true,
+      "sun": ["full", "partial"],
+      "bloom": ["jun", "jul", "aug"],
+      "notes": "A fragrant mint family member with showy purple blooms that attract a variety of pollinators.",
+      "link": "https://www.prairiemoon.com/monarda-fistulosa-wild-bergamot",
+      "height": 4.0,
+      "spread": 2.0,
+      "niche": "40404040-4040-4040-4040-404040404040",
+      "colors": ["22222222-2222-2222-2222-222222222222"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "cccccccc-cccc-cccc-cccc-cccccccccccc", "dddddddd-dddd-dddd-dddd-dddddddddddd", "ffffffff-ffff-ffff-ffff-ffffffffffff", "10101010-1010-1010-1010-101010101010", "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"]
+    }
+  },
+  {
+    "model": "planner.plant",
+    "pk": "b5b5b5b5-b5b5-b5b5-b5b5-b5b5b5b5b5b5",
+    "fields": {
+      "slug": "brown-eyed-susan",
+      "common_name": "Brown-Eyed Susan",
+      "scientific_name": "Rudbeckia triloba",
+      "image": "plants/brown-eyed-susan.png",
+      "native": true,
+      "sun": ["full", "partial"],
+      "bloom": ["jun", "jul", "aug", "sep"],
+      "notes": "A cheerful yellow wildflower that blooms prolifically and attracts a variety of pollinators.",
+      "link": "https://www.prairiemoon.com/rudbeckia-triloba-brown-eyed-susan",
+      "height": 3.0,
+      "spread": 2.0,
+      "niche": "40404040-4040-4040-4040-404040404040",
+      "colors": ["66666666-6666-6666-6666-666666666666"],
+      "features": ["bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "cccccccc-cccc-cccc-cccc-cccccccccccc", "dddddddd-dddd-dddd-dddd-dddddddddddd", "ffffffff-ffff-ffff-ffff-ffffffffffff", "10101010-1010-1010-1010-101010101010", "20202020-2020-2020-2020-202020202020"]
+    }
+  }
+]

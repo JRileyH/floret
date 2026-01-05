@@ -40,7 +40,7 @@ ignore = []
 
 [tool.ruff.lint.isort]
 # Django-specific import ordering
-known-first-party = ["account", "floret", "common", "home", "theme"]
+known-first-party = ["account", "floret", "common", "planner", "theme"]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 
 [tool.ruff.format]
@@ -78,7 +78,7 @@ addopts = [
     "--color=yes",
     "--tb=short",
 ]
-testpaths = ["account", "home", "common"]
+testpaths = ["account", "planner", "common"]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",

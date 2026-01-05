@@ -77,11 +77,23 @@
       background-color: #fffcf9;
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
+    }
+    
+    /* Hide scrollbar but keep functionality */
+    body::-webkit-scrollbar {
+      display: none;
+    }
+    
+    body {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
     }
     </style>
     <link rel="stylesheet" href="{% static 'dist/styles.css' %}" />
     <script src="{% static 'htmx.min.js' %}" defer></script>
     <script src="{% static 'device-fingerprint.js' %}" defer></script>
+    <script src="{% static 'garden-state.js' %}" defer></script>
     {% block scripts %}
     {% endblock scripts %}
   </head>
@@ -89,7 +101,7 @@
     <header>
       {% include "components/navbar.html" %}
     </header>
-    <main class="flex flex-grow relative w-full max-w-screen-xl m-auto">
+    <main class="flex flex-grow relative w-full m-auto">
       <div id="messages">{% include "components/messages.html" %}</div>
       {% block content %}
       {% endblock content %}

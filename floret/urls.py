@@ -14,7 +14,7 @@ urlpatterns = [
         serve,
         {"path": "robots.txt", "document_root": settings.BASE_DIR},
     ),
-    path("", include("home.urls")),
+    path("", include("planner.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

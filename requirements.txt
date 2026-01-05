@@ -94,6 +94,8 @@ pathspec==0.12.1
     # via djlint
 pexpect==4.9.0
     # via ipython
+pillow==12.1.0
+    # via -r requirements.in
 pluggy==1.6.0
     # via pytest
 prometheus-client==0.23.1

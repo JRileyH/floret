@@ -3,25 +3,18 @@
 {% load static %}
 <div class="navbar bg-base-300">
   <div class="flex-1">
-    <a href="{% url 'index' %}" class="btn font-heading btn-ghost text-xl">Floret</a>
+    <a href="{% url 'index' %}" class="btn font-heading btn-ghost text-3xl">Floret</a>
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-4">
       <li class="ml-2">
-        <a>Link</a>
+        <a>Plant List</a>
       </li>
       <li class="ml-2">
-        <details>
-          <summary>Parent</summary>
-          <ul class="bg-base-100 rounded-t-none p-2">
-            <li>
-              <a>Link 1</a>
-            </li>
-            <li>
-              <a>Link 2</a>
-            </li>
-          </ul>
-        </details>
+        <a>Garden Summary</a>
+      </li>
+      <li>
+        <a>Garden Planner</a>
       </li>
       {% if user.is_authenticated %}
         {% if request.resolver_match.url_name != 'profile' %}

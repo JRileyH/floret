@@ -20,8 +20,8 @@ module.exports = {
     themes: [
       {
         floret: {
-          "primary": "#f4a6a6",
-          "primary-content": "#ffffff",
+          "primary": "#5b855b",
+          "primary-content": "#d4e8d4",
           "secondary": "#cfe5ff",
           "secondary-content": "#1e3a5f",
           "accent": "#ffd4a3",

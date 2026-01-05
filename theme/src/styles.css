@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .link-hover-dots {
+    @apply hover:underline;
+    text-decoration-style: dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  
+  .filter-color-swatch.active {
+    @apply ring-4 ring-primary scale-110;
+  }
+  
+  .garden-color-swatch.active {
+    @apply ring-4 ring-primary scale-110;
+  }
+  
+  .filter-feature-icon.active {
+    @apply border-primary bg-primary/20 scale-110;
+  }
+}
