@@ -8,13 +8,19 @@
   <div class="flex-none">
     <ul class="menu menu-horizontal px-4">
       <li class="ml-2">
-        <a>Plant List</a>
+        <a href="{% url 'index' %}"
+           class="{% if request.resolver_match.url_name == 'index' %}
+                    active
+                  {% endif %}">Plant List</a>
       </li>
       <li class="ml-2">
-        <a>Garden Summary</a>
+        <a href="{% url 'garden_summary' %}"
+           class="{% if request.resolver_match.url_name == 'garden_summary' %}
+                    active
+                  {% endif %}">Garden Summary</a>
       </li>
       <li>
-        <a>Garden Planner</a>
+        <a class="opacity-50 cursor-not-allowed" title="Coming soon">Garden Planner</a>
       </li>
       {% if user.is_authenticated %}
         {% if request.resolver_match.url_name != 'profile' %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    Garden Summary - Floret
+{% endblock title %}
+{% block scripts %}
+    <script src="{% static 'garden-summary.js' %}" defer></script>
+{% endblock scripts %}
+{% block content %}
+    <div class="container mx-auto px-6 py-8 max-w-7xl"
+         data-api-url="{% url 'get_garden_plants' %}">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-heading mb-2">📋 Your Garden Plan</h1>
+            <p class="text-base-content/70">Review your selections and garden composition</p>
+        </div>
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="stat bg-base-200 rounded-lg shadow">
+                <div class="stat-title">PLANTS</div>
+                <div class="stat-value text-primary" data-summary-plants>0</div>
+                <div class="stat-desc">Selected combinations</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg shadow">
+                <div class="stat-title">COLORS</div>
+                <div class="stat-value text-secondary" data-summary-colors>0</div>
+                <div class="stat-desc">In your palette</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg shadow">
+                <div class="stat-title">NATIVE</div>
+                <div class="stat-value text-accent" data-summary-native>0</div>
+                <div class="stat-desc">Native species</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg shadow">
+                <div class="stat-title">NICHES</div>
+                <div class="stat-value" data-summary-niches>0/6</div>
+                <div class="stat-desc">Ecosystem roles</div>
+            </div>
+        </div>
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Color Palette -->
+                <div class="card bg-base-200 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title">🎨 Colors</h2>
+                        <div id="color-palette" class="flex flex-wrap gap-2 mt-2"></div>
+                    </div>
+                </div>
+                <!-- Features -->
+                <div class="card bg-base-200 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title">🌿 Features</h2>
+                        <div id="features-list" class="space-y-2 mt-2"></div>
+                    </div>
+                </div>
+                <!-- Selected Plants List -->
+                <div class="card bg-base-200 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title">Selected Plants</h2>
+                        <div id="selected-plants-list"
+                             class="space-y-2 mt-2 max-h-96 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Height Distribution -->
+                <div class="card bg-base-200 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title">📏 Height Distribution</h2>
+                        <p class="text-sm text-base-content/70 mb-4">Distribution based on selected plant heights</p>
+                        <div id="height-chart" class="flex items-end gap-2 h-48"></div>
+                    </div>
+                </div>
+                <!-- Bloom Calendar -->
+                <div class="card bg-base-200 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title">📅 Bloom Calendar</h2>
+                        <p class="text-sm text-base-content/70 mb-4">Color coverage throughout the year</p>
+                        <div id="bloom-calendar"
+                             class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-16">
+            <div class="text-6xl mb-4">🌱</div>
+            <h3 class="text-2xl font-heading mb-2">No Plants Selected</h3>
+            <p class="text-base-content/70 mb-6">Start building your garden by selecting plants</p>
+            <a href="{% url 'index' %}" class="btn btn-primary">Browse Plants</a>
+        </div>
+    </div>
+{% endblock content %}

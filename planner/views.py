@@ -30,6 +30,11 @@ def index(request):
     return render(request, "index.html", context=context)
 
 
+def garden_summary(request):
+    """Garden Summary View - Displays analytics for selected plants."""
+    return render(request, "garden_summary.html")
+
+
 def _validate_filters(raw_filters):
     """
     Validate and sanitize filter values to prevent injection attacks.
@@ -336,3 +341,63 @@ def list_gardens(request):
     ]
 
     return JsonResponse({"gardens": gardens_data})
+
+
+@require_POST
+def get_garden_plants(request):
+    """
+    Fetch plant details for garden summary.
+
+    Expects JSON body:
+    {
+        "plants": [
+            {"plant_id": "uuid", "color_id": "uuid"},
+            ...
+        ]
+    }
+
+    Returns plant details with color, height, bloom, features, niche, native status.
+    """
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"success": False, "error": "Invalid JSON"}, status=400)
+
+    plant_selections = data.get("plants", [])
+    results = []
+
+    for selection in plant_selections:
+        plant_id = selection.get("plant_id")
+        color_id = selection.get("color_id")
+
+        try:
+            plant = (
+                Plant.objects.select_related("niche")
+                .prefetch_related("features", "colors")
+                .get(id=plant_id)
+            )
+            color = Color.objects.get(id=color_id)
+
+            results.append(
+                {
+                    "plant_id": str(plant.id),
+                    "color_id": str(color.id),
+                    "common_name": plant.common_name,
+                    "scientific_name": plant.scientific_name,
+                    "height": plant.height,
+                    "bloom": plant.bloom,
+                    "native": plant.native,
+                    "niche_id": str(plant.niche.id) if plant.niche else None,
+                    "niche_name": plant.niche.title if plant.niche else None,
+                    "color_hex": color.hex_code,
+                    "color_name": color.name,
+                    "features": [
+                        {"id": str(f.id), "name": f.name, "icon": f.icon.url if f.icon else None}
+                        for f in plant.features.all()
+                    ],
+                }
+            )
+        except (Plant.DoesNotExist, Color.DoesNotExist):
+            continue
+
+    return JsonResponse({"success": True, "plants": results})

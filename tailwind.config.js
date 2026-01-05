@@ -1,6 +1,7 @@
 module.exports = {
   content: [
     "./**/templates/**/*.html",
+    "./**/static/**/*.js",
   ],
   theme: {
     extend: {
@@ -26,8 +27,8 @@ module.exports = {
           "secondary-content": "#1e3a5f",
           "accent": "#ffd4a3",
           "accent-content": "#7d4e1f",
-          "neutral": "#a8b5c4",
-          "neutral-content": "#ffffff",
+          "neutral": "#f4d4d4",
+          "neutral-content": "#3d3836",
           "base-100": "#fffcf9",
           "base-200": "#faf5f1",
           "base-300": "#f4e8e3",

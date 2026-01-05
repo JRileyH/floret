@@ -11,11 +11,11 @@
   }
   
   .filter-color-swatch.active {
-    @apply ring-4 ring-primary scale-110;
+    @apply ring-2 ring-primary scale-110;
   }
   
   .garden-color-swatch.active {
-    @apply ring-4 ring-primary scale-110;
+    @apply ring-2 ring-primary scale-110;
   }
   
   .filter-feature-icon.active {
