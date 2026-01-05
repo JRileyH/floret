@@ -1,0 +1,37 @@
+# robots.txt for floret
+
+# Allow all well-behaved bots to crawl public pages
+User-agent: *
+
+# Block admin and account management areas
+Disallow: /admin/
+Disallow: /account/
+
+# Block metrics endpoint
+Disallow: /metrics
+
+# Block media uploads (if they contain user-generated content)
+Disallow: /media/
+
+# Allow everything else
+Allow: /
+
+# Crawl-delay for aggressive bots (optional, helps reduce load)
+# Uncomment if you see aggressive bot behavior
+# Crawl-delay: 10
+
+# Block known bad bots and scrapers
+User-agent: AhrefsBot
+Crawl-delay: 30
+
+User-agent: SemrushBot
+Crawl-delay: 30
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Sitemap location (uncomment when you create one)
+# Sitemap: https://floret.unlaunched.dev/sitemap.xml

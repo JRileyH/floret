@@ -1,0 +1,56 @@
+{
+  // Python interpreter - use workspace .venv
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+
+  // Disable built-in Python linting (we use Ruff extension instead)
+  "python.linting.enabled": false,
+  "python.linting.pylintEnabled": false,
+  "python.linting.mypyEnabled": false,
+
+  // Disable inline type hint suggestions (reduce noise)
+  "basedpyright.analysis.inlayHints.variableTypes": false,
+  "basedpyright.analysis.inlayHints.functionReturnTypes": false,
+
+  // Django-specific settings
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.useLibraryCodeForTypes": true,
+
+  // Exclude from analysis
+  "python.analysis.exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/migrations",
+    ".venv",
+    "venv",
+    "staticfiles"
+  ],
+
+  // Format on save with Ruff
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll": "explicit"
+    }
+  },
+
+  // Ruff linter settings
+  "ruff.enable": true,
+  "ruff.organizeImports": true,
+
+  // Django template settings
+  "[django-html]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "monosans.djlint"
+  },
+
+  // File associations
+  "files.associations": {
+    "**/*.html": "django-html",
+    "**/templates/**/*.html": "django-html",
+    "**/templates/**/*": "django-txt",
+    "**/*.py": "python"
+  }
+}

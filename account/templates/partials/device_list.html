@@ -1,0 +1,47 @@
+<div id="device-list" class="space-y-4">
+  {% if trusted_devices %}
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <div class="badge badge-success badge-lg">Trusted</div>
+        <span class="text-sm text-base-content/60">{{ trusted_devices|length }} device{{ trusted_devices|length|pluralize }}</span>
+      </div>
+      <div class="space-y-2">
+        {% for device in trusted_devices %}
+          {% include "partials/device_card.html" with device=device %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+  {% if untrusted_devices %}
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <div class="badge badge-warning badge-lg">Unverified</div>
+        <span class="text-sm text-base-content/60">{{ untrusted_devices|length }} device{{ untrusted_devices|length|pluralize }}</span>
+      </div>
+      <div class="space-y-2">
+        {% for device in untrusted_devices %}
+          {% include "partials/device_card.html" with device=device %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+  {% if blocked_devices %}
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <div class="badge badge-error badge-lg">Blocked</div>
+        <span class="text-sm text-base-content/60">{{ blocked_devices|length }} device{{ blocked_devices|length|pluralize }}</span>
+      </div>
+      <div class="space-y-2">
+        {% for device in blocked_devices %}
+          {% include "partials/device_card.html" with device=device %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+  {% if not trusted_devices and not untrusted_devices and not blocked_devices %}
+    <div class="alert">
+      {% include "icons/info.html" %}
+      <span>No devices found. This device will be added on your next login.</span>
+    </div>
+  {% endif %}
+</div>

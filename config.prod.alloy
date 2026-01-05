@@ -1,0 +1,94 @@
+// ==============================================================================
+// Grafana Alloy Configuration - Production
+// ==============================================================================
+// This configuration ships metrics and logs to centralized Prometheus and Loki
+// instances running in the Traefik platform on the same VPS.
+//
+// These should point to your centralized observability stack running alongside Traefik.
+// ==============================================================================
+
+// ==============================================================================
+// METRICS COLLECTION
+// ==============================================================================
+
+// Scrape metrics from the Django application's /metrics endpoint
+prometheus.scrape "django" {
+  targets = [{
+    __address__ = "floret:9000",
+    job         = "django",
+    app         = "floret",
+    environment = "prod",
+  }]
+
+  forward_to      = [prometheus.remote_write.central.receiver]
+  scrape_interval = "15s"
+  metrics_path    = "/metrics"
+}
+
+prometheus.scrape "cadvisor" {
+  targets = [{
+    __address__ = "cadvisor:8080",
+    job         = "cadvisor",
+  }]
+  forward_to = [prometheus.remote_write.central.receiver]
+}
+
+// Ship metrics to central Prometheus
+prometheus.remote_write "central" {
+  endpoint {
+    url = "http://prometheus:9090/api/v1/write"
+    // No authentication needed for internal VPS network
+    // Add basic_auth here if your central Prometheus requires it
+  }
+
+  external_labels = {
+    environment = "prod",
+    app         = "floret",
+  }
+}
+
+// ==============================================================================
+// LOG COLLECTION
+// ==============================================================================
+
+// Discover all Docker containers on this host
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+// Collect logs from application containers only (not monitoring infrastructure)
+loki.source.docker "default" {
+  host             = "unix:///var/run/docker.sock"
+  targets          = discovery.docker.containers.targets
+  forward_to       = [loki.process.app_only.receiver]
+  refresh_interval = "30s"
+}
+
+// Only forward logs from floret app containers (exclude monitoring stack)
+loki.process "app_only" {
+  // Drop everything that's NOT a floret app container
+  stage.match {
+    selector = "{container_name!~\"floret|floret-db|floret-cache\"}"
+
+    // This action drops the log entry
+    stage.drop {
+      expression = ".*"
+    }
+  }
+
+  forward_to = [loki.write.central.receiver]
+}
+
+// Ship logs to central Loki
+loki.write "central" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+    // No authentication needed for internal VPS network
+    // Add basic_auth here if your central Loki requires it
+  }
+
+  external_labels = {
+    environment = "prod",
+    app         = "floret",
+  }
+}

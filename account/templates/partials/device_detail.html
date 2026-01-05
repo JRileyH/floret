@@ -1,0 +1,72 @@
+<div class="pt-4">
+  <div class="text-sm font-semibold mb-3 flex items-center gap-2">
+    {% include "icons/network.html" %}
+    IP Addresses ({{ ip_addresses.count }})
+  </div>
+  {% if ip_addresses %}
+    <div class="overflow-x-auto">
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>IP Address</th>
+            <th>Logins</th>
+            <th>Last Seen</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ip in ip_addresses %}
+            <tr hx-post="{% url 'ip_toggle_block' ip.id %}"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-target="#device-{{ device.id }} .collapse-content > div"
+                hx-swap="innerHTML"
+                class="hover cursor-pointer">
+              <td>
+                <code class="text-xs">{{ ip.ip_address }}</code>
+              </td>
+              <td class="text-xs">{{ ip.access_count }}</td>
+              <td class="text-xs">{{ ip.last_seen_at|timesince }} ago</td>
+              <td>
+                {% if ip.blocked %}
+                  <div class="badge badge-error badge-sm">Blocked</div>
+                {% else %}
+                  <div class="badge badge-ghost badge-sm">Active</div>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-sm text-base-content/60">No IP addresses recorded yet.</p>
+  {% endif %}
+  <div class="text-sm font-semibold mb-3 mt-6 flex items-center gap-2">
+    {% include "icons/browser.html" %}
+    Browsers ({{ browsers.count }})
+  </div>
+  {% if browsers %}
+    <div class="overflow-x-auto">
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Browser</th>
+            <th>Logins</th>
+            <th>Last Seen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for browser in browsers %}
+            <tr class="hover">
+              <td class="text-xs">{{ browser.browser_family }}</td>
+              <td class="text-xs">{{ browser.access_count }}</td>
+              <td class="text-xs">{{ browser.last_seen_at|timesince }} ago</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-sm text-base-content/60">No browsers recorded yet.</p>
+  {% endif %}
+</div>

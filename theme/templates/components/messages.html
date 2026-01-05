@@ -1,0 +1,7 @@
+{% if messages %}
+  <div class="absolute top-0 left-0 right-0 z-50 p-4">
+    {% for message in messages %}
+      {% include 'components/alert.html' with type=message.tags message=message %}
+    {% endfor %}
+  </div>
+{% endif %}

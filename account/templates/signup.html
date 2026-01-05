@@ -1,0 +1,8 @@
+{% extends "form.html" %}
+{% block form_footer %}
+  <div class="divider">OR</div>
+  <p class="text-center">
+    Already have an account?
+    <a href="{% url 'login' %}" class="link link-primary">Log in</a>
+  </p>
+{% endblock form_footer %}

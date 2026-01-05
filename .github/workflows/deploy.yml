@@ -1,0 +1,316 @@
+name: Deploy
+
+on:
+  release:
+    types:
+      - released
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+        type: string
+
+env:
+  DEPLOY_PATH: /home/riggy/web/floret
+  VPS_HOST: 192.210.150.70
+  VPS_USER: riggy
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment: stonehenge
+
+    steps:
+      # ==============================================================================
+      # Extract Release Info
+      # ==============================================================================
+      - name: Determine version and branch
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "release" ]; then
+            # Release deployment - use tag as version
+            VERSION=${GITHUB_REF#refs/tags/}
+            BRANCH=""
+            echo "🚀 Deploying release: ${VERSION}"
+          else
+            # Manual workflow_dispatch - use branch name as version
+            VERSION="branch-${{ inputs.branch }}"
+            BRANCH="${{ inputs.branch }}"
+            echo "🚀 Deploying branch: ${BRANCH} (version: ${VERSION})"
+          fi
+
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+          echo "📝 Git SHA: ${{ github.sha }}"
+
+      # ==============================================================================
+      # Prepare SSH Connection
+      # ==============================================================================
+      - name: Setup SSH key
+        run: |
+          set -euo pipefail
+
+          echo "🔐 Setting up SSH key..."
+          mkdir -p ~/.ssh
+
+          # Check if SSH key secret is set
+          if [ -z "${{ secrets.VPS_KEY }}" ]; then
+            echo "❌ ERROR: VPS_KEY secret is not set or is empty"
+            echo "Please configure the VPS_KEY secret in GitHub repository settings"
+            exit 1
+          fi
+
+          echo "${{ secrets.VPS_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "✅ SSH key configured"
+
+          # Add VPS to known hosts to avoid interactive prompt
+          echo "🔍 Adding VPS host to known_hosts..."
+          if ! ssh-keyscan ${{ env.VPS_HOST }} >> ~/.ssh/known_hosts 2>&1; then
+            echo "❌ ERROR: Failed to scan SSH host: ${{ env.VPS_HOST }}"
+            echo "Please verify VPS_HOST is set correctly in workflow env"
+            exit 1
+          fi
+          echo "✅ Host key added for ${{ env.VPS_HOST }}"
+
+      # ==============================================================================
+      # Deploy to VPS
+      # ==============================================================================
+      - name: Initialize repository on VPS
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ env.VPS_USER }}@${{ env.VPS_HOST }} bash -s << 'EOF'
+            set -euo pipefail  # Exit on error, undefined vars, pipe failures
+
+            echo "📍 Current directory: $(pwd)"
+            echo "📍 Target directory: ${{ env.DEPLOY_PATH }}"
+
+            # Create deployment directory if it doesn't exist
+            if [ ! -d "${{ env.DEPLOY_PATH }}" ]; then
+              echo "📁 Creating deployment directory..."
+              if ! mkdir -p "${{ env.DEPLOY_PATH }}"; then
+                echo "❌ ERROR: Failed to create directory ${{ env.DEPLOY_PATH }}"
+                exit 1
+              fi
+              cd "${{ env.DEPLOY_PATH }}"
+
+              echo "📦 Cloning repository..."
+              if ! git clone ${{ github.server_url }}/${{ github.repository }} .; then
+                echo "❌ ERROR: Failed to clone repository"
+                echo "Repository URL: ${{ github.server_url }}/${{ github.repository }}"
+                exit 1
+              fi
+              echo "✅ Repository cloned successfully"
+            else
+              echo "✓ Deployment directory exists"
+            fi
+          EOF
+
+      - name: Pull code and checkout version
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ env.VPS_USER }}@${{ env.VPS_HOST }} bash -s << 'EOF'
+            set -euo pipefail
+
+            cd "${{ env.DEPLOY_PATH }}" || { echo "❌ ERROR: Cannot cd to ${{ env.DEPLOY_PATH }}"; exit 1; }
+            echo "📍 Working directory: $(pwd)"
+
+            echo "📥 Fetching latest code..."
+            if ! git fetch --all --tags 2>&1; then
+              echo "❌ ERROR: Git fetch failed"
+              exit 1
+            fi
+
+            if [ -n "${{ steps.version.outputs.branch }}" ]; then
+              # Manual deployment - checkout branch
+              echo "🔀 Checking out branch: ${{ steps.version.outputs.branch }}"
+              if ! git checkout "${{ steps.version.outputs.branch }}" 2>&1; then
+                echo "❌ ERROR: Failed to checkout branch ${{ steps.version.outputs.branch }}"
+                echo "Available branches:"
+                git branch -a
+                exit 1
+              fi
+              echo "🔄 Resetting to origin/${{ steps.version.outputs.branch }} (deployment server should match GitHub exactly)"
+              if ! git reset --hard origin/${{ steps.version.outputs.branch }} 2>&1; then
+                echo "❌ ERROR: Failed to reset to origin/${{ steps.version.outputs.branch }}"
+                exit 1
+              fi
+            else
+              # Release deployment - checkout tag
+              echo "🏷️  Checking out tag: ${{ steps.version.outputs.version }}"
+              if ! git checkout "${{ steps.version.outputs.version }}" 2>&1; then
+                echo "❌ ERROR: Failed to checkout tag ${{ steps.version.outputs.version }}"
+                echo "Available tags:"
+                git tag -l
+                exit 1
+              fi
+            fi
+
+            echo "✅ Code updated to ${{ steps.version.outputs.version }}"
+            git log -1 --oneline
+          EOF
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create environment file on VPS
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          POSTMARK_API_KEY: ${{ secrets.POSTMARK_API_KEY }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          set -euo pipefail
+
+          echo "📝 Creating .env.prod from template..."
+
+          # Export variables so envsubst can access them
+          export DJANGO_SECRET_KEY="${DJANGO_SECRET_KEY}"
+          export DB_PASSWORD="${DB_PASSWORD}"
+          export REDIS_PASSWORD="${REDIS_PASSWORD}"
+          export POSTMARK_API_KEY="${POSTMARK_API_KEY}"
+          export SENTRY_DSN="${SENTRY_DSN}"
+
+          # Use envsubst to inject secrets into .env.prod.example
+          envsubst < .env.prod.example > /tmp/.env.prod
+
+          echo "✅ Environment file created ($(wc -l < /tmp/.env.prod) lines)"
+
+          # Debug: Check if passwords were actually substituted (without printing them)
+          if grep -q '${DB_PASSWORD}' /tmp/.env.prod; then
+            echo "❌ ERROR: envsubst failed - variables not substituted"
+            exit 1
+          fi
+          echo "✅ Variables successfully substituted"
+
+          # Copy to VPS
+          scp -i ~/.ssh/deploy_key /tmp/.env.prod ${{ env.VPS_USER }}@${{ env.VPS_HOST }}:${{ env.DEPLOY_PATH }}/.env.prod
+
+          # Verify it was copied
+          ssh -i ~/.ssh/deploy_key ${{ env.VPS_USER }}@${{ env.VPS_HOST }} bash -s << 'EOF'
+            if [ -f "${{ env.DEPLOY_PATH }}/.env.prod" ]; then
+              echo "✅ Environment file deployed successfully"
+              echo "File size: $(wc -l < ${{ env.DEPLOY_PATH }}/.env.prod) lines"
+            else
+              echo "❌ ERROR: Environment file not found at ${{ env.DEPLOY_PATH }}/.env.prod"
+              exit 1
+            fi
+          EOF
+
+          # Clean up
+          rm -f /tmp/.env.prod
+
+      - name: Build and deploy
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ env.VPS_USER }}@${{ env.VPS_HOST }} bash -s << 'EOF'
+            set -euo pipefail
+
+            cd "${{ env.DEPLOY_PATH }}" || { echo "❌ ERROR: Cannot cd to ${{ env.DEPLOY_PATH }}"; exit 1; }
+            echo "📍 Working directory: $(pwd)"
+
+            # Verify required files exist
+            echo "🔍 Verifying required files..."
+            for file in docker-compose.prod.yml deploy.sh Dockerfile .env.prod; do
+              if [ ! -f "$file" ]; then
+                echo "❌ ERROR: Required file missing: $file"
+                echo "Directory contents:"
+                ls -la
+                exit 1
+              fi
+              echo "  ✓ $file"
+            done
+
+            echo "🐳 Building Docker image..."
+            if ! docker-compose -f docker-compose.prod.yml build floret 2>&1; then
+              echo "❌ ERROR: Docker build failed"
+              echo "Checking Docker daemon status..."
+              docker info || echo "Docker daemon not responding"
+              exit 1
+            fi
+            echo "✅ Docker build successful"
+
+            echo "🔄 Running deployment script..."
+            chmod +x deploy.sh
+
+            # Run deploy script
+            if ! ./deploy.sh 2>&1; then
+              echo "❌ ERROR: Deployment script failed"
+              echo "Checking container status..."
+              docker-compose -f docker-compose.prod.yml ps || true
+              echo "Recent logs:"
+              docker-compose -f docker-compose.prod.yml logs --tail=100 || true
+              exit 1
+            fi
+            echo "✅ Deployment script completed"
+          EOF
+
+      # ==============================================================================
+      # Post-Deployment Verification
+      # ==============================================================================
+      - name: Verify deployment
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ env.VPS_USER }}@${{ env.VPS_HOST }} bash -s << 'EOF'
+            set -euo pipefail
+
+            cd "${{ env.DEPLOY_PATH }}"
+
+            echo "🔍 Verifying deployment..."
+
+            # Check running containers
+            echo "📊 Container status:"
+            docker-compose -f docker-compose.prod.yml ps
+
+            # Check if main container is running
+            if ! docker ps --filter "name=^floret$" --format "{{.Names}}" | grep -q "^floret$"; then
+              echo "❌ ERROR: Main application container not running"
+              echo "Recent logs:"
+              docker-compose -f docker-compose.prod.yml logs --tail=100 floret
+              exit 1
+            fi
+            echo "✅ Application container is running"
+
+            # Check database
+            if ! docker ps | grep -q "floret-db"; then
+              echo "⚠️  WARNING: Database container not running"
+            else
+              echo "✅ Database container is running"
+            fi
+
+            # Check Redis
+            if ! docker ps | grep -q "floret-cache"; then
+              echo "⚠️  WARNING: Redis container not running"
+            else
+              echo "✅ Redis container is running"
+            fi
+
+            # Show recent logs
+            echo ""
+            echo "📋 Recent application logs:"
+            docker-compose -f docker-compose.prod.yml logs --tail=20 floret
+          EOF
+
+          echo ""
+          echo "✅ Deployment completed successfully!"
+          echo "🌐 Application URL: https://floret.unlaunched.dev"
+          echo "📋 Version: ${{ steps.version.outputs.version }}"
+          echo "🔖 Git SHA: ${{ github.sha }}"
+
+      - name: Cleanup SSH key
+        if: always()
+        run: |
+          rm -f ~/.ssh/deploy_key
+
+      # ==============================================================================
+      # Notification (Optional)
+      # ==============================================================================
+      - name: Deployment notification
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment successful"
+          else
+            echo "❌ Deployment failed"
+            echo "Check the logs above for error details"
+          fi

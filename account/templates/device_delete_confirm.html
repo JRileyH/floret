@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="flex-1 items-center justify-center p-24">
+    <div class="card w-96 bg-base-200 shadow-xl m-auto">
+      <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">Forget Device?</h2>
+        <div class="alert alert-warning mb-4">
+          <div>
+            {% include "icons/warning-triangle.html" %}
+            <div>
+              <h3 class="font-bold">Forget Device</h3>
+              <div class="text-sm">
+                This will remove device and access history for <strong>{{ device.display_name }}</strong> from your account.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-base-100 p-4 rounded-lg mb-4">
+          <div class="text-sm space-y-2">
+            <div>
+              <span class="font-semibold">Platform:</span> {{ device.platform }}
+            </div>
+            <div>
+              <span class="font-semibold">Last seen:</span> {{ device.last_seen_at|timesince }} ago
+            </div>
+            <div>
+              <span class="font-semibold">Logins:</span> {{ device.access_count }}
+            </div>
+          </div>
+        </div>
+        <form method="post">
+          {% csrf_token %}
+          <div class="flex flex-row gap-2 w-full">
+            <button type="submit" class="btn btn-error flex-1">Forget Device</button>
+            <a href="{% url 'profile' %}" class="flex-1">
+              <button type="button" class="btn btn-outline w-full">Cancel</button>
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

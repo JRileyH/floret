@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Define character encoding and ensure responsiveness -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- SEO: Dynamic title with primary keyword, under 60 chars -->
+    <title>
+      {% block title %}
+        Floret
+      {% endblock title %}
+    </title>
+    <!-- SEO: Dynamic meta description, under 160 chars, with call-to-action -->
+    <meta name="description"
+          content="{% block meta_description %}
+                     A flower garden companion app
+                   {% endblock meta_description %}" />
+    <!-- SEO: Optional keywords meta tag for search engines -->
+    <meta name="keywords"
+          content="{% block meta_keywords %}
+                     A flower garden companion app
+                   {% endblock meta_keywords %}" />
+    <!-- SEO: Robots meta tag to control indexing -->
+    <meta name="robots"
+          content="{% block meta_robots %}
+                     index, follow
+                   {% endblock meta_robots %}" />
+    <!-- SEO: Canonical URL to prevent duplicate content issues -->
+    <link rel="canonical"
+          href="{% block canonical_url %}{% url 'index' %}{% endblock canonical_url %}" />
+    <!-- SEO: Open Graph tags for social media sharing -->
+    <meta property="og:title"
+          content="{% block og_title %}
+                     Floret
+                   {% endblock og_title %}" />
+    <meta property="og:description"
+          content="{% block og_description %}
+                     A flower garden companion app
+                   {% endblock og_description %}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url"
+          content="{% block og_url %}
+                     {% url 'index' %}
+                   {% endblock og_url %}" />
+    <meta property="og:image" content="{% static 'logo.png' %}" />
+    <!-- SEO: Twitter Card tags for Twitter sharing -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title"
+          content="{% block twitter_title %}
+                     Floret
+                   {% endblock twitter_title %}" />
+    <meta name="twitter:description"
+          content="{% block twitter_description %}
+                     A flower garden companion app
+                   {% endblock twitter_description %}" />
+    <meta name="twitter:image" content="{% static 'logo.png' %}" />
+    <!-- SEO: Structured data (JSON-LD) for WebSite schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Floret",
+      "url": "{% url 'index' %}"
+    }
+    </script>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+England+SemiJoined&family=Poiret+One&display=swap"
+          rel="stylesheet">
+    <style>
+    /* Update this color when changing DaisyUI theme - should match base-100 */
+    body, html {
+      background-color: #fffcf9;
+      margin: 0;
+      padding: 0;
+    }
+    </style>
+    <link rel="stylesheet" href="{% static 'dist/styles.css' %}" />
+    <script src="{% static 'htmx.min.js' %}" defer></script>
+    <script src="{% static 'device-fingerprint.js' %}" defer></script>
+    {% block scripts %}
+    {% endblock scripts %}
+  </head>
+  <body class="min-h-screen flex flex-col ">
+    <header>
+      {% include "components/navbar.html" %}
+    </header>
+    <main class="flex flex-grow relative w-full max-w-screen-xl m-auto">
+      <div id="messages">{% include "components/messages.html" %}</div>
+      {% block content %}
+      {% endblock content %}
+    </main>
+    <footer>
+      {% include "components/footer.html" %}
+    </footer>
+  </body>
+</html>

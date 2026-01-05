@@ -1,0 +1,61 @@
+services:
+  floret-test-web:
+    image: floret-img
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: floret-test-web
+    command: "test"
+    depends_on:
+      floret-test-db:
+        condition: service_healthy
+      floret-test-cache:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENV=test
+      - DB_HOST=floret-test-db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - REDIS_HOST=floret-test-cache
+      - REDIS_PORT=6379
+      - DJANGO_SECRET_KEY=test-secret-key-not-for-production
+    volumes:
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/code/
+    networks:
+      - floret-test-network
+
+  floret-test-db:
+    image: postgres:18
+    container_name: floret-test-db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    tmpfs:
+      - /var/lib/postgresql/data
+    networks:
+      - floret-test-network
+
+  floret-test-cache:
+    image: redis:8
+    container_name: floret-test-cache
+    command: redis-server --save ""
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    tmpfs:
+      - /data
+    networks:
+      - floret-test-network
+
+networks:
+  floret-test-network:
+    name: test-floret-network
+    driver: bridge

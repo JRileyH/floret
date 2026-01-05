@@ -1,0 +1,12 @@
+{% extends "form.html" %}
+{% block form_footer %}
+  <p class="text-center mt-2">
+    Forgotten your password?
+    <a href="{% url 'request_password_reset' %}" class="link link-primary">Request Reset</a>
+  </p>
+  <div class="divider">OR</div>
+  <p class="text-center">
+    Don't have an account?
+    <a href="{% url 'signup' %}" class="link link-primary">Sign up</a>
+  </p>
+{% endblock form_footer %}

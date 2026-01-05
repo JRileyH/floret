@@ -1,0 +1,19 @@
+{
+  "name": "floret",
+  "version": "1.0.0",
+  "description": "A flower garden companion app",
+  "scripts": {
+    "dev": "tailwindcss -i ./theme/src/styles.css -o ./theme/static/dist/styles.css --watch",
+    "build": "tailwindcss -i ./theme/src/styles.css -o ./theme/static/dist/styles.css --minify"
+  },
+  "keywords": [],
+  "author": "riggy",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10",
+    "daisyui": "^4.12.14",
+    "tailwindcss": "^3.4.0"
+  }
+}

@@ -1,0 +1,122 @@
+services:
+  floret:
+    image: floret-img
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        INSTALL_PG_TOOLS: "true"
+        GIT_SHA: ${GIT_SHA:-dev}
+    pull_policy: build
+    container_name: floret
+    command: "local"
+    restart: always
+    depends_on:
+      floret-dev:
+        condition: service_started
+      floret-db:
+        condition: service_healthy
+      floret-cache:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENV=local
+      - DB_HOST=floret-db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - REDIS_HOST=floret-cache
+      - REDIS_PORT=6379
+      - USE_LOCAL_CELERY=True
+    volumes:
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/code/
+    ports:
+      - '9000:9000'
+    networks:
+      - floret-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  floret-worker:
+    image: floret-img
+    container_name: floret-worker
+    command: "worker"
+    restart: always
+    depends_on:
+      floret-db:
+        condition: service_healthy
+      floret-cache:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENV=local
+      - DB_HOST=floret-db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - REDIS_HOST=floret-cache
+      - REDIS_PORT=6379
+    volumes:
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/code/
+    networks:
+      - floret-network
+
+  floret-dev:
+    image: node:20-bookworm-slim
+    container_name: floret-dev
+    working_dir: /code
+    command: sh -c "npm install && npm run dev"
+    restart: always
+    stdin_open: true
+    tty: true
+    volumes:
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/code
+      - node_modules:/code/node_modules
+    networks:
+      - floret-network
+
+  floret-db:
+    image: postgres:18
+    container_name: floret-db
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - floret-db-data:/var/lib/postgresql
+    ports:
+      - '9001:5432'
+    networks:
+      - floret-network
+
+  floret-cache:
+    image: redis:8
+    container_name: floret-cache
+    command: redis-server
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    # No volume mount - cache is ephemeral and cleared on restart
+    ports:
+      - '9002:6379'
+    networks:
+      - floret-network
+
+networks:
+  floret-network:
+    name: local-floret-network
+    driver: bridge
+
+volumes:
+  floret-db-data:
+  node_modules:
+

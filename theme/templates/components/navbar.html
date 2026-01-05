@@ -1,0 +1,44 @@
+{# Main Navigation Header #}
+{# Usage: {% include 'components/navbar.html' %} #}
+{% load static %}
+<div class="navbar bg-base-300">
+  <div class="flex-1">
+    <a href="{% url 'index' %}" class="btn font-heading btn-ghost text-xl">Floret</a>
+  </div>
+  <div class="flex-none">
+    <ul class="menu menu-horizontal px-4">
+      <li class="ml-2">
+        <a>Link</a>
+      </li>
+      <li class="ml-2">
+        <details>
+          <summary>Parent</summary>
+          <ul class="bg-base-100 rounded-t-none p-2">
+            <li>
+              <a>Link 1</a>
+            </li>
+            <li>
+              <a>Link 2</a>
+            </li>
+          </ul>
+        </details>
+      </li>
+      {% if user.is_authenticated %}
+        {% if request.resolver_match.url_name != 'profile' %}
+          <li class="ml-2">
+            <a href="{% url 'profile' %}" class="btn btn-sm" title="Profile">Profile</a>
+          </li>
+        {% endif %}
+        <li class="ml-2">
+          <a href="{% url 'logout' %}" class="btn btn-sm" title="Log Out">Logout</a>
+        </li>
+      {% else %}
+        <li class="ml-2">
+          <a href="{% url 'login' %}"
+             class="btn btn-primary btn-sm"
+             title="Log In">Log In</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>

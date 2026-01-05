@@ -1,0 +1,10 @@
+{
+    "schedules": [
+        {
+            "name": "Remove Stale Devices",
+            "func": "account.tasks.remove_stale_devices",
+            "schedule_type": "daily",
+            "repeats": -1
+        }
+    ]
+}

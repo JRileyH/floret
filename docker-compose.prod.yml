@@ -1,0 +1,193 @@
+services:
+  # ==============================================================================
+  # WEB APPLICATION
+  # ==============================================================================
+  floret:
+    image: floret-img
+    container_name: floret
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        INSTALL_PG_TOOLS: "false"
+        GIT_SHA: ${GIT_SHA:-unknown}
+    pull_policy: build
+    command: "prod"
+    restart: unless-stopped
+
+    volumes:
+      - staticfiles:/code/staticfiles
+
+    depends_on:
+      floret-db:
+        condition: service_healthy
+      floret-cache:
+        condition: service_healthy
+
+    env_file:
+      - .env.prod
+
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENV=prod
+      - DB_HOST=floret-db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=$${DB_PASSWORD}
+      - REDIS_HOST=floret-cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=$${REDIS_PASSWORD}
+
+    networks:
+      - web
+      - floret-network
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.floret.rule=Host(`floret.unlaunched.dev`)"
+      - "traefik.http.routers.floret.entrypoints=websecure"
+      - "traefik.http.routers.floret.tls.certresolver=letsencrypt"
+      - "traefik.http.services.floret.loadbalancer.server.port=9000"
+      - "traefik.docker.network=web"
+      - "traefik.http.routers.floret.middlewares=floret-ratelimit,floret-headers"
+      
+      # Rate limiting: 50 requests burst per IP, 10 avg per second
+      - "traefik.http.middlewares.floret-ratelimit.ratelimit.average=10"
+      - "traefik.http.middlewares.floret-ratelimit.ratelimit.burst=50"
+      - "traefik.http.middlewares.floret-ratelimit.ratelimit.period=1s"
+      
+      # Security headers
+      - "traefik.http.middlewares.floret-headers.headers.customResponseHeaders.X-Frame-Options=SAMEORIGIN"
+      - "traefik.http.middlewares.floret-headers.headers.customResponseHeaders.X-Content-Type-Options=nosniff"
+      - "traefik.http.middlewares.floret-headers.headers.customResponseHeaders.Referrer-Policy=strict-origin-when-cross-origin"
+
+  # ==============================================================================
+  # TASK WORKER
+  # ==============================================================================
+  floret-worker:
+    image: floret-img
+    container_name: floret-worker
+    command: "worker"
+    restart: unless-stopped
+
+    depends_on:
+      floret-db:
+        condition: service_healthy
+      floret-cache:
+        condition: service_healthy
+
+    env_file:
+      - .env.prod
+
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENV=prod
+      - DB_HOST=floret-db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=$${DB_PASSWORD}
+      - REDIS_HOST=floret-cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=$${REDIS_PASSWORD}
+
+    networks:
+      - floret-network
+
+  # ==============================================================================
+  # DATABASE
+  # ==============================================================================
+  floret-db:
+    image: postgres:18
+    container_name: floret-db
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=$${DB_PASSWORD}
+    volumes:
+      - floret-db-data:/var/lib/postgresql
+    networks:
+      - floret-network
+
+  # ==============================================================================
+  # CACHE
+  # ==============================================================================
+  floret-cache:
+    image: redis:8
+    container_name: floret-cache
+    env_file:
+      - .env.prod
+    # Redis requires the password in the command, but we need it from env
+    # So we use a shell to interpolate the REDIS_PASSWORD env var
+    command: sh -c 'redis-server --requirepass "$$REDIS_PASSWORD"'
+    restart: unless-stopped
+    healthcheck:
+      # Health check also needs to read password from env
+      test: ["CMD", "sh", "-c", "redis-cli --pass \"$$REDIS_PASSWORD\" ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - floret-network
+
+  # ==============================================================================
+  # OBSERVABILITY
+  # ==============================================================================
+
+  floret-alloy:
+    image: grafana/alloy:latest
+    container_name: floret-alloy
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    volumes:
+      - ./config.prod.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - floret-alloy-data:/var/lib/alloy/data
+    networks:
+      - floret-network
+      - web  # Connect to Traefik network to reach central Prometheus/Loki
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: floret-cadvisor
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - web
+    restart: unless-stopped
+
+# ==============================================================================
+# NETWORKS
+# ==============================================================================
+networks:
+  web:
+    external: true
+  floret-network:
+    name: prod-floret-network
+    driver: bridge
+
+# ==============================================================================
+# VOLUMES
+# ==============================================================================
+volumes:
+  floret-db-data:
+    name: floret-db-data
+  staticfiles:
+  floret-alloy-data:
+    name: floret-alloy-data

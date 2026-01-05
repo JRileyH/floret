@@ -1,0 +1,32 @@
+{# Main Marketing Footer #}
+{# Usage: {% include 'components/footer.html' %} #}
+{% load static %}
+<div class="footer bg-base-200 text-base-content p-10">
+  <aside>
+    <div class="w-32">
+      <img alt="Logo" src="{% static 'logo.png' %}" />
+    </div>
+    <p class="text-lg font-heading leading-none">Floret</p>
+    <p class="leading-none">Plant Smarter.</p>
+  </aside>
+  <nav>
+    <h6 class="footer-title">Services</h6>
+    <a class="link link-hover">Branding</a>
+    <a class="link link-hover">Design</a>
+    <a class="link link-hover">Marketing</a>
+    <a class="link link-hover">Advertisement</a>
+  </nav>
+  <nav>
+    <h6 class="footer-title">Company</h6>
+    <a class="link link-hover">About us</a>
+    <a class="link link-hover">Contact</a>
+    <a class="link link-hover">Jobs</a>
+    <a class="link link-hover">Press kit</a>
+  </nav>
+  <nav>
+    <h6 class="footer-title">Legal</h6>
+    <a class="link link-hover">Terms of use</a>
+    <a class="link link-hover">Privacy policy</a>
+    <a class="link link-hover">Cookie policy</a>
+  </nav>
+</div>

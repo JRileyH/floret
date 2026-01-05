@@ -1,0 +1,25 @@
+fixtures:
+  - model: account.User
+    factory: account.fixtures.factories.UserFactory
+    count: 1
+    overrides:
+      email: admin@floret.dev
+      first_name: Admin
+      last_name: Dev
+      password: admin123
+      is_staff: true
+      is_superuser: true
+
+  - model: account.User
+    factory: account.fixtures.factories.UserFactory
+    count: 2
+    overrides:
+      is_staff: true
+      email: "staff{n}@floret.dev"
+
+  - model: account.User
+    factory: account.fixtures.factories.UserFactory
+    count: 10
+    overrides:
+      is_active: true
+

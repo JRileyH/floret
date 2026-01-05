@@ -1,0 +1,17 @@
+{
+  "pythonVersion": "3.13",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "exclude": [
+    "**/__pycache__",
+    "**/node_modules",
+    ".venv",
+    "venv",
+    "**/migrations",
+    "staticfiles"
+  ],
+  "reportOptionalMemberAccess": false,
+  "reportGeneralTypeIssues": false,
+  "reportPrivateImportUsage": false
+}

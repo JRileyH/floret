@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "charliermarsh.ruff",
+    "monosans.djlint",
+    "detachhead.basedpyright",
+    "batisteo.vscode-django",
+    "bradlc.vscode-tailwindcss"
+  ]
+}

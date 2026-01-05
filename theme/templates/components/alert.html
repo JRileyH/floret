@@ -1,0 +1,12 @@
+{# Alert Component #}
+{# Usage: {% include 'components/alert.html' with type='success' message='Operation successful!' %} #}
+{# type: 'info'|'success'|'warning'|'error' (default: info) #}
+{% with alert_class=type|default:'info' icon_path='icons/'|add:type|add:'.html' %}
+  <div role="alert" class="alert alert-{{ alert_class }} mb-4">
+    {% include icon_path %}
+    <span>{{ message }}</span>
+    <button class="btn btn-sm btn-circle btn-neutral btn-outline"
+            onclick="this.parentElement.parentElement.remove()"
+            aria-label="Dismiss alert">{% include "icons/close.html" %}</button>
+  </div>
+{% endwith %}
