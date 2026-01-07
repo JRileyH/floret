@@ -15,7 +15,9 @@
       </div>
       <div class="flex gap-2">
         <button id="view-mode-toggle" class="btn btn-outline">🗻 Topographical</button>
-        <button id="save-garden-btn" class="btn btn-primary">Save Garden</button>
+        <button id="save-garden-btn"
+                class="btn btn-primary"
+                {% if not user.is_authenticated %}disabled{% endif %}>Save Garden</button>
       </div>
     </div>
     <!-- Garden Dimensions -->
