@@ -100,7 +100,8 @@ class Command(BaseCommand):
         if total_created == 0:
             self.stdout.write(
                 self.style.WARNING(
-                    "\nNo fixtures found. Create app/fixtures/fixtures.yml or fixtures.json to add fixtures."
+                    "\nNo fixtures found. Create app/fixtures"
+                    + "/fixtures.yml or fixtures.json to add fixtures."
                 )
             )
         else:

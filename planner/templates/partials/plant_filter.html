@@ -1,195 +1,195 @@
 <!-- Plant Filter Bar -->
 <div class="bg-base-200 rounded-2xl shadow-lg border-2 border-base-300 p-6 mb-6">
-    <!-- Primary Filter Row -->
-    <div class="flex flex-wrap gap-3 mb-4">
-        <div class="flex-1 min-w-[200px]">
-            <input type="text"
-                   id="search-input"
-                   placeholder="🔍 Search plants..."
-                   class="input input-bordered w-full bg-base-100">
-        </div>
-        <div class="dropdown">
-            <div tabindex="0"
-                 role="button"
-                 class="btn btn-outline bg-base-100 border-base-300 min-w-[150px] justify-between"
-                 id="niche-filter-btn">
-                <span id="niche-filter-text">Any Niche</span>
-                {% include "icons/caret-down.html" %}
-            </div>
-            <ul tabindex="0"
-                class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-lg border border-base-300"
-                id="niche-filter-menu">
-                <li>
-                    <a data-value=""
-                       class="niche-option active focus:bg-primary focus:text-primary-content">Any Niche</a>
-                </li>
-                {% for niche in niches %}
-                    <li>
-                        <a data-value="{{ niche.id }}"
-                           class="niche-option focus:bg-primary focus:text-primary-content">{{ niche.title }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-            <input type="hidden" id="niche-filter" value="">
-        </div>
-        <div class="dropdown">
-            <div tabindex="0"
-                 role="button"
-                 class="btn btn-outline bg-base-100 border-base-300 min-w-[150px] justify-between"
-                 id="sun-filter-btn">
-                <span id="sun-filter-text">Any Sun</span>
-                {% include "icons/caret-down.html" %}
-            </div>
-            <ul tabindex="0"
-                class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-lg border border-base-300"
-                id="sun-filter-menu">
-                <li>
-                    <a data-value=""
-                       class="sun-option active focus:bg-primary focus:text-primary-content">Any Sun</a>
-                </li>
-                <li>
-                    <a data-value="full"
-                       class="sun-option focus:bg-primary focus:text-primary-content">Full Sun</a>
-                </li>
-                <li>
-                    <a data-value="partial"
-                       class="sun-option focus:bg-primary focus:text-primary-content">Part Shade</a>
-                </li>
-                <li>
-                    <a data-value="shade"
-                       class="sun-option focus:bg-primary focus:text-primary-content">Shade</a>
-                </li>
-            </ul>
-            <input type="hidden" id="sun-filter" value="">
-        </div>
-        <div class="dropdown">
-            <div tabindex="0"
-                 role="button"
-                 class="btn btn-outline bg-base-100 border-base-300 min-w-[150px] justify-between"
-                 id="bloom-filter-btn">
-                <span id="bloom-filter-text">Any Bloom Month</span>
-                {% include "icons/caret-down.html" %}
-            </div>
-            <ul tabindex="0"
-                class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-lg border border-base-300"
-                id="bloom-filter-menu">
-                <li>
-                    <a data-value=""
-                       class="bloom-option active focus:bg-primary focus:text-primary-content">Any Bloom Month</a>
-                </li>
-                <li>
-                    <a data-value="apr"
-                       class="bloom-option focus:bg-primary focus:text-primary-content">Apr</a>
-                </li>
-                <li>
-                    <a data-value="may"
-                       class="bloom-option focus:bg-primary focus:text-primary-content">May</a>
-                </li>
-                <li>
-                    <a data-value="jun"
-                       class="bloom-option focus:bg-primary focus:text-primary-content">Jun</a>
-                </li>
-                <li>
-                    <a data-value="jul"
-                       class="bloom-option focus:bg-primary focus:text-primary-content">Jul</a>
-                </li>
-                <li>
-                    <a data-value="aug"
-                       class="bloom-option focus:bg-primary focus:text-primary-content">Aug</a>
-                </li>
-                <li>
-                    <a data-value="sep"
-                       class="bloom-option focus:bg-primary focus:text-primary-content">Sep</a>
-                </li>
-                <li>
-                    <a data-value="oct"
-                       class="bloom-option focus:bg-primary focus:text-primary-content">Oct</a>
-                </li>
-            </ul>
-            <input type="hidden" id="bloom-filter" value="">
-        </div>
-        <label class="label cursor-pointer gap-2 bg-base-100 px-4 rounded-lg border border-base-300">
-            <input type="checkbox"
-                   id="native-filter"
-                   class="checkbox checkbox-primary checkbox-sm">
-            <span class="label-text">Native Only</span>
-        </label>
-        <label class="label cursor-pointer gap-2 bg-base-100 px-4 rounded-lg border border-base-300">
-            <input type="checkbox"
-                   id="buyable-filter"
-                   class="checkbox checkbox-primary checkbox-sm">
-            <span class="label-text">Buyable</span>
-        </label>
-        <button id="reset-filters" class="btn btn-outline btn-error">Reset</button>
+  <!-- Primary Filter Row -->
+  <div class="flex flex-wrap gap-3 mb-4">
+    <div class="flex-1 min-w-[200px]">
+      <input type="text"
+             id="search-input"
+             placeholder="🔍 Search plants..."
+             class="input input-bordered w-full bg-base-100">
     </div>
-    <!-- Secondary Filter Row -->
-    <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
-        <!-- Colors -->
-        <div class="flex items-center gap-2">
-            <label class="text-sm font-semibold opacity-70 whitespace-nowrap">Colors:</label>
-            <div class="flex gap-1.5 flex-wrap">
-                {% for color in colors %}
-                    <div class="filter-color-swatch w-10 h-10 rounded-lg shadow-md cursor-pointer transition-all hover:scale-110 border-2 border-transparent"
-                         data-color="{{ color.id }}"
-                         style="background-color: {{ color.hex_code }}"
-                         title="{{ color.name }}"></div>
-                {% endfor %}
-            </div>
-        </div>
-        <!-- Features -->
-        <div class="flex items-center gap-2">
-            <label class="text-sm font-semibold opacity-70 whitespace-nowrap">Features:</label>
-            <div class="flex gap-1.5 flex-wrap">
-                {% for feature in features %}
-                    <div class="filter-feature-icon w-10 h-10 rounded-lg shadow-md cursor-pointer transition-all hover:scale-110 border-2 border-base-300 hover:border-primary active:border-primary active:bg-primary/10 flex items-center justify-center bg-base-100"
-                         data-feature="{{ feature.id }}"
-                         title="{{ feature.name }}">
-                        {% if feature.icon %}<img src="{{ feature.icon.url }}" alt="{{ feature.name }}" class="w-6 h-6">{% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-        <!-- Height Range -->
-        <div class="flex items-center gap-2 whitespace-nowrap">
-            <label class="text-sm font-semibold opacity-70">Height:</label>
-            <input type="number"
-                   id="height-min"
-                   placeholder="Min"
-                   min="0"
-                   max="10"
-                   step="0.5"
-                   class="input input-bordered input-sm w-14 bg-base-100 pr-0">
-            <span class="text-sm opacity-70">-</span>
-            <input type="number"
-                   id="height-max"
-                   placeholder="Max"
-                   min="0"
-                   max="10"
-                   step="0.5"
-                   class="input input-bordered input-sm w-14 bg-base-100 pr-0">
-            <span class="text-xs opacity-70">ft</span>
-        </div>
-        <!-- Spread Range -->
-        <div class="flex items-center gap-2 whitespace-nowrap">
-            <label class="text-sm font-semibold opacity-70">Spread:</label>
-            <input type="number"
-                   id="spread-min"
-                   placeholder="Min"
-                   min="0"
-                   max="5"
-                   step="0.5"
-                   class="input input-bordered input-sm w-14 bg-base-100 pr-0">
-            <span class="text-sm opacity-70">-</span>
-            <input type="number"
-                   id="spread-max"
-                   placeholder="Max"
-                   min="0"
-                   max="5"
-                   step="0.5"
-                   class="input input-bordered input-sm w-14 bg-base-100 pr-0">
-            <span class="text-xs opacity-70">ft</span>
-        </div>
+    <div class="dropdown">
+      <div tabindex="0"
+           role="button"
+           class="btn btn-outline bg-base-100 border-base-300 min-w-[150px] justify-between"
+           id="niche-filter-btn">
+        <span id="niche-filter-text">Any Niche</span>
+        {% include "icons/caret-down.html" %}
+      </div>
+      <ul tabindex="0"
+          class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-lg border border-base-300"
+          id="niche-filter-menu">
+        <li>
+          <a data-value=""
+             class="niche-option active focus:bg-primary focus:text-primary-content">Any Niche</a>
+        </li>
+        {% for niche in niches %}
+          <li>
+            <a data-value="{{ niche.id }}"
+               class="niche-option focus:bg-primary focus:text-primary-content">{{ niche.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      <input type="hidden" id="niche-filter" value="">
     </div>
+    <div class="dropdown">
+      <div tabindex="0"
+           role="button"
+           class="btn btn-outline bg-base-100 border-base-300 min-w-[150px] justify-between"
+           id="sun-filter-btn">
+        <span id="sun-filter-text">Any Sun</span>
+        {% include "icons/caret-down.html" %}
+      </div>
+      <ul tabindex="0"
+          class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-lg border border-base-300"
+          id="sun-filter-menu">
+        <li>
+          <a data-value=""
+             class="sun-option active focus:bg-primary focus:text-primary-content">Any Sun</a>
+        </li>
+        <li>
+          <a data-value="full"
+             class="sun-option focus:bg-primary focus:text-primary-content">Full Sun</a>
+        </li>
+        <li>
+          <a data-value="partial"
+             class="sun-option focus:bg-primary focus:text-primary-content">Part Shade</a>
+        </li>
+        <li>
+          <a data-value="shade"
+             class="sun-option focus:bg-primary focus:text-primary-content">Shade</a>
+        </li>
+      </ul>
+      <input type="hidden" id="sun-filter" value="">
+    </div>
+    <div class="dropdown">
+      <div tabindex="0"
+           role="button"
+           class="btn btn-outline bg-base-100 border-base-300 min-w-[150px] justify-between"
+           id="bloom-filter-btn">
+        <span id="bloom-filter-text">Any Bloom Month</span>
+        {% include "icons/caret-down.html" %}
+      </div>
+      <ul tabindex="0"
+          class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-lg border border-base-300"
+          id="bloom-filter-menu">
+        <li>
+          <a data-value=""
+             class="bloom-option active focus:bg-primary focus:text-primary-content">Any Bloom Month</a>
+        </li>
+        <li>
+          <a data-value="apr"
+             class="bloom-option focus:bg-primary focus:text-primary-content">Apr</a>
+        </li>
+        <li>
+          <a data-value="may"
+             class="bloom-option focus:bg-primary focus:text-primary-content">May</a>
+        </li>
+        <li>
+          <a data-value="jun"
+             class="bloom-option focus:bg-primary focus:text-primary-content">Jun</a>
+        </li>
+        <li>
+          <a data-value="jul"
+             class="bloom-option focus:bg-primary focus:text-primary-content">Jul</a>
+        </li>
+        <li>
+          <a data-value="aug"
+             class="bloom-option focus:bg-primary focus:text-primary-content">Aug</a>
+        </li>
+        <li>
+          <a data-value="sep"
+             class="bloom-option focus:bg-primary focus:text-primary-content">Sep</a>
+        </li>
+        <li>
+          <a data-value="oct"
+             class="bloom-option focus:bg-primary focus:text-primary-content">Oct</a>
+        </li>
+      </ul>
+      <input type="hidden" id="bloom-filter" value="">
+    </div>
+    <label class="label cursor-pointer gap-2 bg-base-100 px-4 rounded-lg border border-base-300">
+      <input type="checkbox"
+             id="native-filter"
+             class="checkbox checkbox-primary checkbox-sm">
+      <span class="label-text">Native Only</span>
+    </label>
+    <label class="label cursor-pointer gap-2 bg-base-100 px-4 rounded-lg border border-base-300">
+      <input type="checkbox"
+             id="buyable-filter"
+             class="checkbox checkbox-primary checkbox-sm">
+      <span class="label-text">Buyable</span>
+    </label>
+    <button id="reset-filters" class="btn btn-outline btn-error">Reset</button>
+  </div>
+  <!-- Secondary Filter Row -->
+  <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
+    <!-- Colors -->
+    <div class="flex items-center gap-2">
+      <label class="text-sm font-semibold opacity-70 whitespace-nowrap">Colors:</label>
+      <div class="flex gap-1.5 flex-wrap">
+        {% for color in colors %}
+          <div class="filter-color-swatch w-10 h-10 rounded-lg shadow-md cursor-pointer transition-all hover:scale-110 border-2 border-transparent"
+               data-color="{{ color.id }}"
+               style="background-color: {{ color.hex_code }}"
+               title="{{ color.name }}"></div>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- Features -->
+    <div class="flex items-center gap-2">
+      <label class="text-sm font-semibold opacity-70 whitespace-nowrap">Features:</label>
+      <div class="flex gap-1.5 flex-wrap">
+        {% for feature in features %}
+          <div class="filter-feature-icon w-10 h-10 rounded-lg shadow-md cursor-pointer transition-all hover:scale-110 border-2 border-base-300 hover:border-primary active:border-primary active:bg-primary/10 flex items-center justify-center bg-base-100"
+               data-feature="{{ feature.id }}"
+               title="{{ feature.name }}">
+            {% if feature.icon %}<img src="{{ feature.icon.url }}" alt="{{ feature.name }}" class="w-6 h-6">{% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- Height Range -->
+    <div class="flex items-center gap-2 whitespace-nowrap">
+      <label class="text-sm font-semibold opacity-70">Height:</label>
+      <input type="number"
+             id="height-min"
+             placeholder="Min"
+             min="0"
+             max="10"
+             step="0.5"
+             class="input input-bordered input-sm w-14 bg-base-100 pr-0">
+      <span class="text-sm opacity-70">-</span>
+      <input type="number"
+             id="height-max"
+             placeholder="Max"
+             min="0"
+             max="10"
+             step="0.5"
+             class="input input-bordered input-sm w-14 bg-base-100 pr-0">
+      <span class="text-xs opacity-70">ft</span>
+    </div>
+    <!-- Spread Range -->
+    <div class="flex items-center gap-2 whitespace-nowrap">
+      <label class="text-sm font-semibold opacity-70">Spread:</label>
+      <input type="number"
+             id="spread-min"
+             placeholder="Min"
+             min="0"
+             max="5"
+             step="0.5"
+             class="input input-bordered input-sm w-14 bg-base-100 pr-0">
+      <span class="text-sm opacity-70">-</span>
+      <input type="number"
+             id="spread-max"
+             placeholder="Max"
+             min="0"
+             max="5"
+             step="0.5"
+             class="input input-bordered input-sm w-14 bg-base-100 pr-0">
+      <span class="text-xs opacity-70">ft</span>
+    </div>
+  </div>
 </div>
 <!-- Hidden input to hold JSON-encoded filters for HTMX -->
 <input type="hidden" id="filters-json" name="filters" data-filter value="{}">

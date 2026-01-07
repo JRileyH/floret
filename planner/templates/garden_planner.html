@@ -1,133 +1,133 @@
 {% extends "base.html" %}
 {% load static %}
 {% block scripts %}
-    <script src="{% static 'garden-planner.js' %}" defer></script>
+  <script src="{% static 'garden-planner.js' %}" defer></script>
 {% endblock scripts %}
 {% block title %}
-    Floret | Garden Planner
+  Floret | Garden Planner
 {% endblock title %}
 {% block content %}
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h1 class="text-4xl font-heading mb-2">Garden Planner</h1>
-                <p class="text-base-content/70">Drag and drop plants to design your garden</p>
-            </div>
-            <div class="flex gap-2">
-                <button id="view-mode-toggle" class="btn btn-outline">🗻 Topographical</button>
-                <button id="save-garden-btn" class="btn btn-primary">Save Garden</button>
-            </div>
-        </div>
-        <!-- Garden Dimensions -->
-        <div class="card bg-base-200 mb-6">
-            <div class="card-body">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text">Garden Name</span>
-                        </label>
-                        <input type="text"
-                               id="garden-name"
-                               class="input input-bordered"
-                               value="My Garden">
-                    </div>
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text">Width (feet)</span>
-                        </label>
-                        <input type="number"
-                               id="garden-width"
-                               class="input input-bordered"
-                               value="25"
-                               min="1"
-                               step="0.5">
-                    </div>
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text">Length (feet)</span>
-                        </label>
-                        <input type="number"
-                               id="garden-length"
-                               class="input input-bordered"
-                               value="10"
-                               min="1"
-                               step="0.5">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Canvas Container -->
-        <div class="card bg-base-200 mb-6">
-            <div class="card-body">
-                <div class="flex justify-center">
-                    <canvas id="garden-canvas"
-                            class="border-2 border-base-300 rounded-lg shadow-lg bg-success/10"
-                            width="800"
-                            height="400">
-                    </canvas>
-                </div>
-            </div>
-        </div>
-        <!-- Plant Cards -->
-        <div class="card bg-base-200">
-            <div class="card-body">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="card-title">Selected Plants</h2>
-                    <div class="flex gap-2 items-center">
-                        <div class="flex gap-1 items-center">
-                            <span class="text-xs opacity-70">Height:</span>
-                            <input type="number"
-                                   id="filter-height-min"
-                                   class="input input-bordered input-sm w-16"
-                                   placeholder="0"
-                                   min="0"
-                                   max="8"
-                                   step="0.5">
-                            <span class="text-xs opacity-70">-</span>
-                            <input type="number"
-                                   id="filter-height-max"
-                                   class="input input-bordered input-sm w-16"
-                                   placeholder="8"
-                                   min="0"
-                                   max="8"
-                                   step="0.5">
-                        </div>
-                        <div class="flex gap-1 items-center">
-                            <span class="text-xs opacity-70">Spread:</span>
-                            <input type="number"
-                                   id="filter-spread-min"
-                                   class="input input-bordered input-sm w-16"
-                                   placeholder="0"
-                                   min="0"
-                                   max="6"
-                                   step="0.5">
-                            <span class="text-xs opacity-70">-</span>
-                            <input type="number"
-                                   id="filter-spread-max"
-                                   class="input input-bordered input-sm w-16"
-                                   placeholder="6"
-                                   min="0"
-                                   max="6"
-                                   step="0.5">
-                        </div>
-                    </div>
-                </div>
-                <div id="plant-cards-container"
-                     class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <!-- Plant cards will be rendered here -->
-                </div>
-                <div id="empty-plants-message"
-                     class="text-center py-8 text-base-content/50 hidden">
-                    <p>No plants selected yet.</p>
-                    <p class="text-sm mt-2">
-                        Visit the <a href="{% url 'index' %}" class="link link-primary">Plant Catalog</a> to add plants to your garden.
-                    </p>
-                </div>
-            </div>
-        </div>
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-4xl font-heading mb-2">Garden Planner</h1>
+        <p class="text-base-content/70">Drag and drop plants to design your garden</p>
+      </div>
+      <div class="flex gap-2">
+        <button id="view-mode-toggle" class="btn btn-outline">🗻 Topographical</button>
+        <button id="save-garden-btn" class="btn btn-primary">Save Garden</button>
+      </div>
     </div>
-    <!-- Hidden data attributes for API URLs -->
-    <div class="hidden"
-         data-save-url="{% url 'garden_save' %}"
-         data-plants-url="{% url 'get_garden_plants' %}"></div>
+    <!-- Garden Dimensions -->
+    <div class="card bg-base-200 mb-6">
+      <div class="card-body">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Garden Name</span>
+            </label>
+            <input type="text"
+                   id="garden-name"
+                   class="input input-bordered"
+                   value="My Garden">
+          </div>
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Width (feet)</span>
+            </label>
+            <input type="number"
+                   id="garden-width"
+                   class="input input-bordered"
+                   value="25"
+                   min="1"
+                   step="0.5">
+          </div>
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Length (feet)</span>
+            </label>
+            <input type="number"
+                   id="garden-length"
+                   class="input input-bordered"
+                   value="10"
+                   min="1"
+                   step="0.5">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Canvas Container -->
+    <div class="card bg-base-200 mb-6">
+      <div class="card-body">
+        <div class="flex justify-center">
+          <canvas id="garden-canvas"
+                  class="border-2 border-base-300 rounded-lg shadow-lg bg-success/10"
+                  width="800"
+                  height="400">
+          </canvas>
+        </div>
+      </div>
+    </div>
+    <!-- Plant Cards -->
+    <div class="card bg-base-200">
+      <div class="card-body">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="card-title">Selected Plants</h2>
+          <div class="flex gap-2 items-center">
+            <div class="flex gap-1 items-center">
+              <span class="text-xs opacity-70">Height:</span>
+              <input type="number"
+                     id="filter-height-min"
+                     class="input input-bordered input-sm w-16"
+                     placeholder="0"
+                     min="0"
+                     max="8"
+                     step="0.5">
+              <span class="text-xs opacity-70">-</span>
+              <input type="number"
+                     id="filter-height-max"
+                     class="input input-bordered input-sm w-16"
+                     placeholder="8"
+                     min="0"
+                     max="8"
+                     step="0.5">
+            </div>
+            <div class="flex gap-1 items-center">
+              <span class="text-xs opacity-70">Spread:</span>
+              <input type="number"
+                     id="filter-spread-min"
+                     class="input input-bordered input-sm w-16"
+                     placeholder="0"
+                     min="0"
+                     max="6"
+                     step="0.5">
+              <span class="text-xs opacity-70">-</span>
+              <input type="number"
+                     id="filter-spread-max"
+                     class="input input-bordered input-sm w-16"
+                     placeholder="6"
+                     min="0"
+                     max="6"
+                     step="0.5">
+            </div>
+          </div>
+        </div>
+        <div id="plant-cards-container"
+             class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <!-- Plant cards will be rendered here -->
+        </div>
+        <div id="empty-plants-message"
+             class="text-center py-8 text-base-content/50 hidden">
+          <p>No plants selected yet.</p>
+          <p class="text-sm mt-2">
+            Visit the <a href="{% url 'index' %}" class="link link-primary">Plant Catalog</a> to add plants to your garden.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Hidden data attributes for API URLs -->
+  <div class="hidden"
+       data-save-url="{% url 'garden_save' %}"
+       data-plants-url="{% url 'get_garden_plants' %}"></div>
 {% endblock %}
