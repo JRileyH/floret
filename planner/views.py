@@ -35,6 +35,11 @@ def garden_summary(request):
     return render(request, "garden_summary.html")
 
 
+def garden_planner(request):
+    """Garden Planner View - Interactive canvas for placing plants."""
+    return render(request, "garden_planner.html")
+
+
 def _validate_filters(raw_filters):
     """
     Validate and sanitize filter values to prevent injection attacks.
@@ -195,12 +200,16 @@ def plant_list(request):
 
 @login_required
 @require_POST
+@login_required
+@require_POST
 def save_garden(request):
     """
     Save a garden from localStorage to the database.
+    Creates new garden or updates existing one.
 
     Expects JSON body:
     {
+        "garden_id": "uuid" (optional - if updating existing),
         "name": "Garden Name",
         "width": 10.5,
         "length": 8.0,
@@ -209,7 +218,8 @@ def save_garden(request):
             {
                 "plant_id": "uuid",
                 "color_id": "uuid",
-                "positions": [[2.5, 1.0], [3.5, 1.0], [4.5, 2.0]]
+                "niche_id": "uuid",
+                "positions": [{"x": 2.5, "y": 1.0}, {"x": 3.5, "y": 1.0}]
             }
         ]
     }
@@ -228,35 +238,72 @@ def save_garden(request):
 
     try:
         with transaction.atomic():
-            # Create the garden
-            garden = Garden.objects.create(
-                user=request.user,
-                name=data["name"],
-                width=float(data["width"]),
-                length=float(data["length"]),
-                description=data.get("description", ""),
-            )
+            garden_id = data.get("garden_id")
 
-            # Create garden plants with positions
-            for plant_data in data["plants"]:
-                # Create the GardenPlant (plant/color combination)
-                garden_plant = GardenPlant.objects.create(
-                    garden=garden,
-                    plant_id=plant_data["plant_id"],
-                    color_id=plant_data["color_id"],
+            if garden_id:
+                # Update existing garden
+                garden = get_object_or_404(Garden, id=garden_id, user=request.user)
+                garden.name = data["name"]
+                garden.width = float(data["width"])
+                garden.length = float(data["length"])
+                garden.description = data.get("description", "")
+                garden.save()
+            else:
+                # Create new garden
+                garden = Garden.objects.create(
+                    user=request.user,
+                    name=data["name"],
+                    width=float(data["width"]),
+                    length=float(data["length"]),
+                    description=data.get("description", ""),
                 )
 
-                # Create individual PlantPosition records for each coordinate
+            # Get current plant/color combinations from localStorage
+            incoming_plants = {
+                (plant_data["plant_id"], plant_data["color_id"]) for plant_data in data["plants"]
+            }
+
+            # Get existing GardenPlants
+            existing_garden_plants = {
+                (str(gp.plant_id), str(gp.color_id)): gp for gp in garden.garden_plants.all()
+            }
+
+            # Hard delete GardenPlants that are no longer in localStorage
+            for key, gp in existing_garden_plants.items():
+                if key not in incoming_plants:
+                    # Hard delete positions first
+                    gp.positions.all().delete()
+                    # Hard delete the garden plant
+                    gp.delete()
+
+            # Process plants from localStorage
+            for plant_data in data["plants"]:
+                plant_key = (plant_data["plant_id"], plant_data["color_id"])
+
+                # Get or create GardenPlant
+                if plant_key in existing_garden_plants:
+                    garden_plant = existing_garden_plants[plant_key]
+                else:
+                    garden_plant = GardenPlant.objects.create(
+                        garden=garden,
+                        plant_id=plant_data["plant_id"],
+                        color_id=plant_data["color_id"],
+                    )
+
+                # Hard delete all existing positions
+                garden_plant.positions.all().delete()
+
+                # Create new positions from localStorage
                 positions = plant_data.get("positions", [])
                 for pos in positions:
-                    if isinstance(pos, (list, tuple)) and len(pos) == 2:
+                    if isinstance(pos, dict) and "x" in pos and "y" in pos:
                         PlantPosition.objects.create(
                             garden_plant=garden_plant,
-                            x=float(pos[0]),
-                            y=float(pos[1]),
+                            x=float(pos["x"]),
+                            y=float(pos["y"]),
                         )
 
-            return JsonResponse({"success": True, "garden_id": str(garden.id)}, status=201)
+            return JsonResponse({"success": True, "garden_id": str(garden.id)}, status=200)
     except (ValueError, KeyError, Plant.DoesNotExist, Color.DoesNotExist) as e:
         return JsonResponse({"success": False, "error": f"Invalid data: {str(e)}"}, status=400)
 
@@ -265,10 +312,11 @@ def save_garden(request):
 @require_GET
 def load_garden(request, garden_id):
     """
-    Load a garden from the database and return as JSON.
+    Load a garden from the database and return as JSON for localStorage.
 
     Returns:
     {
+        "garden_id": "uuid",
         "name": "Garden Name",
         "width": 10.5,
         "length": 8.0,
@@ -277,7 +325,8 @@ def load_garden(request, garden_id):
             {
                 "plant_id": "uuid",
                 "color_id": "uuid",
-                "positions": [[2.5, 1.0], [3.5, 1.0]]
+                "niche_id": "uuid",
+                "positions": [{"x": 2.5, "y": 1.0}, {"x": 3.5, "y": 1.0}]
             }
         ]
     }
@@ -288,15 +337,17 @@ def load_garden(request, garden_id):
         {
             "plant_id": str(gp.plant.id),
             "color_id": str(gp.color.id),
-            "positions": [[pos.x, pos.y] for pos in gp.positions.all()],
+            "niche_id": str(gp.plant.niche_id) if gp.plant.niche_id else None,
+            "positions": [{"x": pos.x, "y": pos.y} for pos in gp.positions.all()],
         }
-        for gp in garden.garden_plants.select_related("plant", "color").prefetch_related(
-            "positions"
-        )
+        for gp in garden.garden_plants.select_related(
+            "plant", "color", "plant__niche"
+        ).prefetch_related("positions")
     ]
 
     return JsonResponse(
         {
+            "garden_id": str(garden.id),
             "name": garden.name,
             "width": garden.width,
             "length": garden.length,
@@ -385,6 +436,7 @@ def get_garden_plants(request):
                     "common_name": plant.common_name,
                     "scientific_name": plant.scientific_name,
                     "height": plant.height,
+                    "spread": plant.spread,
                     "bloom": plant.bloom,
                     "native": plant.native,
                     "niche_id": str(plant.niche.id) if plant.niche else None,

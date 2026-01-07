@@ -6,6 +6,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("plants/", views.plant_list, name="plant_list"),
     path("summary/", views.garden_summary, name="garden_summary"),
+    path("planner/", views.garden_planner, name="garden_planner"),
     # Garden API endpoints
     path("api/garden-plants/", views.get_garden_plants, name="get_garden_plants"),
     path("garden/save/", views.save_garden, name="garden_save"),

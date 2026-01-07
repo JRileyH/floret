@@ -12,15 +12,29 @@ class GardenState {
 
     /**
      * Load garden state from localStorage
-     * @returns {Object} Garden state with plants array
+     * @returns {Object} Garden state with plants array, dimensions, and name
      */
     load() {
         try {
             const stored = localStorage.getItem(this.storageKey);
-            return stored ? JSON.parse(stored) : { plants: [] };
+            if (stored) {
+                return JSON.parse(stored);
+            }
+            // Default garden state
+            return {
+                name: 'My Garden',
+                width: 25,
+                length: 10,
+                plants: []
+            };
         } catch (e) {
             console.error('Failed to load garden state:', e);
-            return { plants: [] };
+            return {
+                name: 'My Garden',
+                width: 25,
+                length: 10,
+                plants: []
+            };
         }
     }
 
@@ -92,6 +106,97 @@ class GardenState {
             this.state.plants.map(p => p.niche_id).filter(Boolean)
         );
         return uniqueNiches.size;
+    }
+
+    /**
+     * Update garden dimensions
+     * @param {number} width - Garden width in feet
+     * @param {number} length - Garden length in feet
+     */
+    updateDimensions(width, length) {
+        this.state.width = parseFloat(width);
+        this.state.length = parseFloat(length);
+        this.save();
+    }
+
+    /**
+     * Update garden name
+     * @param {string} name - Garden name
+     */
+    updateName(name) {
+        this.state.name = name;
+        this.save();
+    }
+
+    /**
+     * Add a position for a plant
+     * @param {string} plantId - Plant UUID
+     * @param {string} colorId - Color UUID
+     * @param {number} x - X coordinate in feet
+     * @param {number} y - Y coordinate in feet
+     * @returns {number} Position index (for tracking)
+     */
+    addPosition(plantId, colorId, x, y) {
+        const plant = this.state.plants.find(
+            p => p.plant_id === plantId && p.color_id === colorId
+        );
+
+        if (plant) {
+            plant.positions.push({ x, y });
+            this.save();
+            return plant.positions.length - 1;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Update a position for a plant
+     * @param {string} plantId - Plant UUID
+     * @param {string} colorId - Color UUID
+     * @param {number} index - Position index
+     * @param {number} x - X coordinate in feet
+     * @param {number} y - Y coordinate in feet
+     */
+    updatePosition(plantId, colorId, index, x, y) {
+        const plant = this.state.plants.find(
+            p => p.plant_id === plantId && p.color_id === colorId
+        );
+
+        if (plant && plant.positions[index]) {
+            plant.positions[index] = { x, y };
+            this.save();
+        }
+    }
+
+    /**
+     * Remove a position for a plant
+     * @param {string} plantId - Plant UUID
+     * @param {string} colorId - Color UUID
+     * @param {number} index - Position index
+     */
+    removePosition(plantId, colorId, index) {
+        const plant = this.state.plants.find(
+            p => p.plant_id === plantId && p.color_id === colorId
+        );
+
+        if (plant && plant.positions[index] !== undefined) {
+            plant.positions.splice(index, 1);
+            this.save();
+        }
+    }
+
+    /**
+     * Get all positions for a plant
+     * @param {string} plantId - Plant UUID
+     * @param {string} colorId - Color UUID
+     * @returns {Array} Positions array
+     */
+    getPositions(plantId, colorId) {
+        const plant = this.state.plants.find(
+            p => p.plant_id === plantId && p.color_id === colorId
+        );
+        return plant ? plant.positions : [];
     }
 
     /**

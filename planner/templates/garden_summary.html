@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}
-    Garden Summary - Floret
+    Floret | Garden Summary
 {% endblock title %}
 {% block scripts %}
     <script src="{% static 'garden-summary.js' %}" defer></script>
@@ -11,7 +11,7 @@
          data-api-url="{% url 'get_garden_plants' %}">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-4xl font-heading mb-2">📋 Your Garden Plan</h1>
+            <h1 class="text-4xl font-heading mb-2">Garden Summary</h1>
             <p class="text-base-content/70">Review your selections and garden composition</p>
         </div>
         <!-- Stats Grid -->
