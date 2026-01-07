@@ -386,7 +386,8 @@ def list_gardens(request):
             "id": str(garden.id),
             "name": garden.name,
             "created_at": garden.created_at.isoformat(),
-            "plant_count": garden.plant_count,
+            # added via annotation
+            "plant_count": garden.plant_count,  # type: ignore[attr-defined]
         }
         for garden in gardens
     ]

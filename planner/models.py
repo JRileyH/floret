@@ -1,7 +1,16 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from common.mixins import base as base_mixins
+
+if TYPE_CHECKING:
+    from uuid import UUID
+
+    from django.db.models import Manager
 
 
 class SunOptions(models.TextChoices):
@@ -100,6 +109,9 @@ class Garden(base_mixins.BaseModel):
         related_name="gardens",
     )
 
+    if TYPE_CHECKING:
+        garden_plants: Manager[GardenPlant]
+
     def __str__(self):
         return f"{self.name} ({self.user.email})"
 
@@ -110,6 +122,11 @@ class GardenPlant(base_mixins.BaseModel):
     garden = models.ForeignKey(Garden, on_delete=models.CASCADE, related_name="garden_plants")
     plant = models.ForeignKey(Plant, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
+
+    if TYPE_CHECKING:
+        positions: Manager[PlantPosition]
+        plant_id: UUID
+        color_id: UUID
 
     class Meta:
         unique_together = ("garden", "plant", "color")
