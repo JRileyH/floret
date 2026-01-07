@@ -179,6 +179,9 @@ def plant_list(request):
             .filter(matching_features=len(feature_ids))
         )
 
+    # Apply ordering to all results
+    plants = plants.order_by("common_name")
+
     # Pagination
     page_number = request.GET.get("page", 1)
     paginator = Paginator(plants, 24)  # 24 plants per page
