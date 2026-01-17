@@ -17,6 +17,7 @@ services:
 
     volumes:
       - staticfiles:/code/staticfiles
+      - mediafiles:/code/media
 
     depends_on:
       floret-db:
@@ -189,5 +190,7 @@ volumes:
   floret-db-data:
     name: floret-db-data
   staticfiles:
+  mediafiles:
+    name: floret-media
   floret-alloy-data:
     name: floret-alloy-data
