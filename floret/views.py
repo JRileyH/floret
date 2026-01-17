@@ -7,4 +7,4 @@ logger = logging.getLogger(__name__)
 
 
 def version(request):
-    return HttpResponse(settings.VERSION)
+    return HttpResponse(settings.VERSION, content_type="text/plain")
