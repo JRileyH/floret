@@ -120,6 +120,26 @@ if SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
 
+    def traces_sampler(sampling_context):
+        """
+        Custom sampler to exclude /metrics endpoint from tracing.
+        This prevents Alloy's frequent scrapes from consuming trace quota.
+        """
+        # Get the WSGI/ASGI environ from the sampling context
+        asgi_scope = sampling_context.get("asgi_scope")
+        wsgi_environ = sampling_context.get("wsgi_environ")
+        # Check the path - works for both ASGI and WSGI
+        path = None
+        if asgi_scope:
+            path = asgi_scope.get("path")
+        elif wsgi_environ:
+            path = wsgi_environ.get("PATH_INFO")
+        # Don't sample /metrics endpoint
+        if path == "/metrics":
+            return 0.0
+        # Sample everything else at 10%
+        return 0.1
+
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         send_default_pii=True,
@@ -127,8 +147,9 @@ if SENTRY_DSN:
         integrations=[
             DjangoIntegration(),
         ],
-        traces_sample_rate=0.1,
+        traces_sampler=traces_sampler,
         sample_rate=1.0,
+        release=VERSION,
     )
 
 POSTMARK_API_KEY = os.environ.get("POSTMARK_API_KEY")
