@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.static import serve
 
-from floret import views as views
+from floret import views
 
 urlpatterns = [
     path("version/", view=views.version, name="version"),
