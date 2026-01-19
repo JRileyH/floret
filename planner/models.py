@@ -34,6 +34,16 @@ class BloomOptions(models.TextChoices):
     DECEMBER = "dec", "December"
 
 
+class GerminationOptions(models.TextChoices):
+    WARM = "warm", "Warm Soil"
+    COOL = "cool", "Cool Soil"
+    BOIL = "boil", "Boil"
+    COLD = "cold", "Cold Stratification"
+    SCARIFY = "scarify", "Scarify"
+    SURFACE = "surface", "Surface Sowing"
+    LIVE = "live", "Plant Seedlings"
+
+
 class Niche(base_mixins.BaseModel):
     slug = models.SlugField(max_length=100, unique=True)
     icon = models.ImageField(upload_to="icons/", blank=True, null=True)
@@ -74,6 +84,37 @@ class Plant(base_mixins.BaseModel):
         blank=True,
         null=True,
     )
+    germination = models.CharField(
+        max_length=20,
+        choices=GerminationOptions.choices,
+        blank=True,
+    )
+    stratification = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="Stratification time in days. (If applicable)",
+    )
+
+    @property
+    def germination_display(self) -> str:
+        """Return germination instructions based on the germination type."""
+        match self.germination:
+            case "warm":
+                return "Sow directly into warm soil during growing season."
+            case "cool":
+                return "Sow in cool soil. Late fall before frost or early spring."
+            case "boil":
+                return "Boil water, remove from heat, soak seeds for 24 hours."
+            case "cold":
+                return "Requires cold stratification. Refrigerate seeds in moist medium for "
+            case "scarify":
+                return "Rub between sandpaper to remove seed coat, then germinate in baggie."
+            case "surface":
+                return "Sow on soil surface. Requires light or cannot be buried."
+            case "live":
+                return "Germination is difficult; Consider purchasing seedlings or cuttings."
+            case _:
+                return ""
 
     def __str__(self):
         return self.common_name

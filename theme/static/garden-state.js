@@ -228,16 +228,26 @@ class GardenState {
     updateColorSwatches() {
         document.querySelectorAll('[data-plant-id]').forEach(card => {
             const plantId = card.dataset.plantId;
+            let hasSelection = false;
+            
             card.querySelectorAll('[data-color-id]').forEach(swatch => {
                 const colorId = swatch.dataset.colorId;
                 const isSelected = this.isSelected(plantId, colorId);
                 
                 if (isSelected) {
                     swatch.classList.add('active');
+                    hasSelection = true;
                 } else {
                     swatch.classList.remove('active');
                 }
             });
+            
+            // Add visual state to card if any swatches are selected
+            if (hasSelection) {
+                card.classList.add('has-selection');
+            } else {
+                card.classList.remove('has-selection');
+            }
         });
     }
 
@@ -253,16 +263,60 @@ class GardenState {
 // Initialize global garden state
 window.gardenState = new GardenState();
 
-// Delegate click events for garden color swatches
+// Delegate click events for garden color swatches and plant cards
 document.addEventListener('click', (e) => {
+    // Don't trigger on links or interactive elements
+    if (e.target.closest('a, button, input, select, textarea')) {
+        return;
+    }
+    
     const swatch = e.target.closest('.garden-color-swatch');
     if (swatch) {
+        // Individual swatch click
+        e.stopPropagation();
         const plantCard = swatch.closest('[data-plant-id]');
         if (plantCard) {
             const plantId = plantCard.dataset.plantId;
             const colorId = swatch.dataset.colorId;
             const nicheId = swatch.dataset.plantNiche || '';
             window.gardenState.togglePlant(plantId, colorId, nicheId);
+        }
+    } else {
+        // Card click - toggle all swatches
+        const plantCard = e.target.closest('.plant-card[data-plant-id]');
+        if (plantCard) {
+            const plantId = plantCard.dataset.plantId;
+            const swatches = plantCard.querySelectorAll('[data-color-id]');
+            
+            if (swatches.length > 0) {
+                // Check if any are selected
+                let anySelected = false;
+                swatches.forEach(swatch => {
+                    const colorId = swatch.dataset.colorId;
+                    if (window.gardenState.isSelected(plantId, colorId)) {
+                        anySelected = true;
+                    }
+                });
+                
+                // Toggle all swatches
+                swatches.forEach(swatch => {
+                    const colorId = swatch.dataset.colorId;
+                    const nicheId = swatch.dataset.plantNiche || '';
+                    const isSelected = window.gardenState.isSelected(plantId, colorId);
+                    
+                    if (anySelected) {
+                        // Deselect all if any are selected
+                        if (isSelected) {
+                            window.gardenState.togglePlant(plantId, colorId, nicheId);
+                        }
+                    } else {
+                        // Select all if none are selected
+                        if (!isSelected) {
+                            window.gardenState.togglePlant(plantId, colorId, nicheId);
+                        }
+                    }
+                });
+            }
         }
     }
 });

@@ -1,5 +1,5 @@
 <!-- Plant Card using daisyUI -->
-<div class="card bg-base-200 shadow-xl border-2 border-base-300"
+<div class="card bg-base-200 shadow-xl border-2 border-base-300 plant-card cursor-pointer transition-all"
      data-plant-id="{{ plant.id }}">
   <!-- Card Header -->
   <div class="card-body p-6">
@@ -105,9 +105,36 @@
         </div>
       {% endfor %}
     </div>
+    <!-- Germination Instructions -->
+    {% if plant.germination %}
+      <div class="bg-base-100 rounded-lg p-4 pl-5 mb-4 border-l-4
+                  {% if plant.germination == 'live' %}
+                    border-l-error
+                  {% elif plant.germination == 'cold' %}
+                    border-l-warning
+                  {% else %}
+                    border-l-success
+                  {% endif %}
+                  relative">
+        <div class="absolute left-0 top-0 bottom-0 w-1
+                    {% if plant.germination == 'live' %}
+                      bg-error/30
+                    {% elif plant.germination == 'cold' %}
+                      bg-warning/30
+                    {% else %}
+                      bg-success/30
+                    {% endif %}"></div>
+        <p class="text-sm text-base-content/80 leading-relaxed">
+          {{ plant.germination_display }}
+          {% if plant.stratification %}{{ plant.stratification }} days.{% endif %}
+        </p>
+      </div>
+    {% endif %}
     <!-- Notes -->
-    <div class="alert bg-base-300 border-0">
-      <p class="text-sm">{{ plant.notes }}</p>
-    </div>
+    {% if plant.notes %}
+      <div class="alert bg-base-300 border-0">
+        <p class="text-sm">{{ plant.notes }}</p>
+      </div>
+    {% endif %}
   </div>
 </div>
