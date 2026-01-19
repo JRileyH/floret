@@ -69,7 +69,21 @@ class PlantAdmin(BaseModelAdmin):
     readonly_fields = ("created_at", "updated_at")
     fieldsets = (
         ("Basic Info", {"fields": ("common_name", "scientific_name", "slug", "image")}),
-        ("Characteristics", {"fields": ("sun", "bloom", "native", "niche", "height", "spread")}),
+        (
+            "Characteristics",
+            {
+                "fields": (
+                    "sun",
+                    "bloom",
+                    "native",
+                    "niche",
+                    "height",
+                    "spread",
+                    "germination",
+                    "stratification",
+                )
+            },
+        ),
         ("Relationships", {"fields": ("features", "colors")}),
         ("Additional Info", {"fields": ("notes", "link")}),
         ("Metadata", {"fields": ("created_at", "updated_at"), "classes": ("collapse",)}),

@@ -18,6 +18,10 @@
     @apply ring-2 ring-primary scale-110;
   }
   
+  .plant-card.has-selection {
+    @apply border-primary shadow-2xl bg-primary/5;
+  }
+  
   .filter-feature-icon.active {
     @apply border-primary bg-primary/20 scale-110;
   }
