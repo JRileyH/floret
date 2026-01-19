@@ -1,6 +1,10 @@
 <!-- Plant Card using daisyUI -->
 <div class="card bg-base-200 shadow-xl border-2 border-base-300 plant-card cursor-pointer transition-all"
-     data-plant-id="{{ plant.id }}">
+     data-plant-id="{{ plant.id }}"
+     role="button"
+     tabindex="0"
+     aria-label="View details for {{ plant.common_name }}"
+     onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }">
   <!-- Card Header -->
   <div class="card-body p-6">
     <div class="flex justify-between items-start gap-4 mb-4">
@@ -107,31 +111,24 @@
     </div>
     <!-- Germination Instructions -->
     {% if plant.germination %}
-      <div class="bg-base-100 rounded-lg p-4 pl-5 mb-4 border-l-4
-                  {% if plant.germination == 'live' %}
-                    border-l-error
-                  {% elif plant.germination == 'cold' %}
-                    border-l-warning
-                  {% else %}
-                    border-l-success
-                  {% endif %}
-                  relative">
-        <div class="absolute left-0 top-0 bottom-0 w-1
-                    {% if plant.germination == 'live' %}
-                      bg-error/30
-                    {% elif plant.germination == 'cold' %}
-                      bg-warning/30
-                    {% else %}
-                      bg-success/30
-                    {% endif %}"></div>
-        <p class="text-sm text-base-content/80 leading-relaxed">{{ plant.germination_display }}</p>
+      {% if plant.germination == 'live' %}
+        <div class="bg-base-100 rounded-lg p-4 pl-5 mb-4 border-l-4 border-l-error relative">
+          <div class="absolute left-0 top-0 bottom-0 w-1 bg-error/30"></div>
+        {% elif plant.germination == 'cold' %}
+          <div class="bg-base-100 rounded-lg p-4 pl-5 mb-4 border-l-4 border-l-warning relative">
+            <div class="absolute left-0 top-0 bottom-0 w-1 bg-warning/30"></div>
+          {% else %}
+            <div class="bg-base-100 rounded-lg p-4 pl-5 mb-4 border-l-4 border-l-success relative">
+              <div class="absolute left-0 top-0 bottom-0 w-1 bg-success/30"></div>
+            {% endif %}
+            <p class="text-sm text-base-content/80 leading-relaxed">{{ plant.germination_display }}</p>
+          </div>
+        {% endif %}
+        <!-- Notes -->
+        {% if plant.notes %}
+          <div class="alert bg-base-300 border-0">
+            <p class="text-sm">{{ plant.notes }}</p>
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
-    <!-- Notes -->
-    {% if plant.notes %}
-      <div class="alert bg-base-300 border-0">
-        <p class="text-sm">{{ plant.notes }}</p>
-      </div>
-    {% endif %}
-  </div>
-</div>
+    </div>

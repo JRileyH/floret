@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='plant',
             name='germination',
-            field=models.CharField(blank=True, choices=[('warm', 'Warm Soil'), ('cool', 'Cool Soil'), ('boil', 'Boil'), ('cold', 'Cold Stratification'), ('scarify', 'Scarify'), ('surface', 'Surface Sowing')], max_length=20),
+            field=models.CharField(blank=True, choices=[('warm', 'Warm Soil'), ('cool', 'Cool Soil'), ('boil', 'Boil'), ('cold', 'Cold Stratification'), ('scarify', 'Scarify'), ('surface', 'Surface Sowing'), ('live', 'Plant Seedlings')], max_length=20),
         ),
         migrations.AddField(
             model_name='plant',

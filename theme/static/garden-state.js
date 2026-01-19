@@ -267,6 +267,7 @@ window.gardenState = new GardenState();
 document.addEventListener('click', (e) => {
     // Don't trigger on links or interactive elements
     if (e.target.closest('a, button, input, select, textarea')) {
+        e.stopPropagation();
         return;
     }
     
