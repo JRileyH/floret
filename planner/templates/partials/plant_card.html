@@ -119,7 +119,7 @@
       {% endif %}
         <p class="text-sm text-base-content/80 leading-relaxed">
           {{ plant.germination_display }}
-          {% if plant.stratification %}{{ plant.stratification }} days.{% endif %}
+          {% if plant.germination == 'cold' and plant.stratification %} {{ plant.stratification }} days.{% endif %}
         </p>
       </div>
     {% endif %}
