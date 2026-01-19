@@ -1,6 +1,10 @@
 <!-- Plant Card using daisyUI -->
 <div class="card bg-base-200 shadow-xl border-2 border-base-300 plant-card cursor-pointer transition-all"
-     data-plant-id="{{ plant.id }}">
+     data-plant-id="{{ plant.id }}"
+     role="button"
+     tabindex="0"
+     aria-label="View details for {{ plant.common_name }}"
+     onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }">
   <!-- Card Header -->
   <div class="card-body p-6">
     <div class="flex justify-between items-start gap-4 mb-4">
