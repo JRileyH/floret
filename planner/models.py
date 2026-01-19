@@ -106,7 +106,12 @@ class Plant(base_mixins.BaseModel):
             case "boil":
                 return "Boil water, remove from heat, soak seeds for 24 hours."
             case "cold":
-                return "Requires cold stratification. Refrigerate seeds in moist medium for "
+                display = "Requires cold stratification."
+                if self.stratification:
+                    display += (
+                        f" Refrigerate seeds in moist medium for {self.stratification} days."
+                    )
+                return display
             case "scarify":
                 return "Rub between sandpaper to remove seed coat, then germinate in baggie."
             case "surface":
